@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  FREELANCER
+  CLIENT
+}
+
+enum Tier {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+model User {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  email      String  @unique
+  password   String?
+  role       Role    @default(FREELANCER)
+  tier       Tier    @default(FREE)
+  isVerified Boolean @default(false) @map("is_verified")
+  isDeleted  Boolean @default(false) @map("is_deleted")
+
+  profileId String?  @map("profile_id") @db.ObjectId
+  profile   Profile?
+
+  otpId String? @map("otp_id") @db.ObjectId
+  otp   Otp?
+
+  accountId String? @map("account_id")
+
+  subscriptionId String?       @map("subscription_id") @db.ObjectId
+  subscription   Subscription?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Profile {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  firstName String @map("first_name")
+  lastName  String @map("last_name")
+
+  userId String @unique @map("user_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum OtpType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
+
+model Otp {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  code String
+  type OtpType @default(VERIFY_EMAIL)
+
+  userId String @unique @map("user_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+}
+
+model Subscription {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  subscriptionId   String             @unique @map("subscription_id")
+  customerId       String             @unique @map("customer_id")
+  priceId          String             @map("price_id")
+  status           SubscriptionStatus
+  currentPeriodEnd DateTime           @map("current_period_end")
+
+  userId String @unique @map("user_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
