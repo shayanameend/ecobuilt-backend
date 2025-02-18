@@ -1,16 +1,22 @@
 import { Router } from "express";
 
+import {
+  refresh,
+  resendOtp,
+  resetPassword,
+  signIn,
+  signUp,
+  updatePassword,
+  verifyOtp,
+} from "~/controllers/auth";
 import { verifyRequest } from "~/middlewares/auth";
 
 const authRouter = Router();
 
-// @ts-ignore
 authRouter.post("/sign-up", signUp);
 
-// @ts-ignore
 authRouter.post("/sign-in", signIn);
 
-// @ts-ignore
 authRouter.post("/reset-password", resetPassword);
 
 authRouter.post(
@@ -18,7 +24,6 @@ authRouter.post(
   verifyRequest({
     isVerified: false,
   }),
-  // @ts-ignore
   resendOtp,
 );
 
@@ -27,7 +32,6 @@ authRouter.post(
   verifyRequest({
     isVerified: false,
   }),
-  // @ts-ignore
   verifyOtp,
 );
 
@@ -36,7 +40,6 @@ authRouter.post(
   verifyRequest({
     isVerified: true,
   }),
-  // @ts-ignore
   updatePassword,
 );
 
@@ -45,7 +48,6 @@ authRouter.post(
   verifyRequest({
     isVerified: true,
   }),
-  // @ts-ignore
   refresh,
 );
 

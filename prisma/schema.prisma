@@ -17,7 +17,7 @@ model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   email      String  @unique
-  password   String?
+  password   String
   role       Role    @default(BUYER)
   isVerified Boolean @default(false) @map("is_verified")
   isDeleted  Boolean @default(false) @map("is_deleted")
@@ -27,8 +27,6 @@ model User {
 
   otpId String? @map("otp_id") @db.ObjectId
   otp   Otp?
-
-  accountId String? @map("account_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

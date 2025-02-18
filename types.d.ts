@@ -1,4 +1,4 @@
-import type { Role, Tier } from "@prisma/client";
+import type { Role } from "@prisma/client";
 
 export type JSON =
   | number
@@ -22,12 +22,11 @@ export interface Info {
 declare global {
   namespace Express {
     export interface Request {
-      user?: {
+      user: {
         id: string;
         email: string;
         password?: string | null;
         role: Role;
-        tier: Tier;
         isVerified: boolean;
         updatedAt: Date;
       };

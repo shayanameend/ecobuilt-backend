@@ -1,4 +1,4 @@
-import type { Role, Tier } from "@prisma/client";
+import type { Role } from "@prisma/client";
 
 import jwt from "jsonwebtoken";
 
@@ -8,9 +8,6 @@ async function signToken(payload: {
   id: string;
   email: string;
   role: Role;
-  tier: Tier;
-  totalStorage: number;
-  usedStorage: number;
   isVerified: boolean;
   updatedAt: Date;
 }) {
