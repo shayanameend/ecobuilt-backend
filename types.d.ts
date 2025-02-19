@@ -25,7 +25,7 @@ declare global {
       user: {
         id: string;
         email: string;
-        password?: string | null;
+        password: string;
         role: Role;
         isVerified: boolean;
         updatedAt: Date;

@@ -39,14 +39,6 @@ async function signUp(request: Request, response: Response) {
       },
     });
 
-    const token = await signToken({
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-      updatedAt: user.updatedAt,
-    });
-
     const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     let code = "";
@@ -79,6 +71,14 @@ async function signUp(request: Request, response: Response) {
       code: otp.code,
     });
 
+    const token = await signToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      updatedAt: user.updatedAt,
+    });
+
     return response.created(
       {
         data: { token },
@@ -106,7 +106,11 @@ async function signIn(request: Request, response: Response) {
       throw new NotFoundResponse("User Not Found!");
     }
 
-    user.isVerified = user.password ? user.isVerified : false;
+    const isPasswordValid = await argon.verify(user.password, password);
+
+    if (!isPasswordValid) {
+      throw new BadResponse("Invalid Password!");
+    }
 
     const token = await signToken({
       id: user.id,
@@ -115,12 +119,6 @@ async function signIn(request: Request, response: Response) {
       isVerified: user.isVerified,
       updatedAt: user.updatedAt,
     });
-
-    const isPasswordValid = await argon.verify(user.password, password);
-
-    if (!isPasswordValid) {
-      throw new BadResponse("Invalid Password!");
-    }
 
     if (!user.isVerified) {
       const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -192,16 +190,6 @@ async function resetPassword(request: Request, response: Response) {
       throw new NotFoundResponse("User Not Found!");
     }
 
-    user.isVerified = false;
-
-    const token = await signToken({
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-      updatedAt: user.updatedAt,
-    });
-
     const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     let code = "";
@@ -232,6 +220,14 @@ async function resetPassword(request: Request, response: Response) {
     await sendOTP({
       to: user.email,
       code: otp.code,
+    });
+
+    const token = await signToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      isVerified: user.isVerified,
+      updatedAt: user.updatedAt,
     });
 
     return response.success(
@@ -275,6 +271,7 @@ async function resendOtp(request: Request, response: Response) {
         },
       },
     });
+
     await sendOTP({
       to: request.user.email,
       code: otp.code,
@@ -379,6 +376,7 @@ async function refresh(request: Request, response: Response) {
       updatedAt: request.user.updatedAt,
     });
 
+    // @ts-ignore
     request.user.password = undefined;
 
     return response.success(

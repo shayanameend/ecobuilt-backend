@@ -1,4 +1,5 @@
-import { nodemailerTransporter } from "../lib/nodemailer";
+import { env } from "~/lib/env";
+import { nodemailerTransporter } from "~/lib/nodemailer";
 
 async function sendOTP({
   to,
@@ -10,8 +11,8 @@ async function sendOTP({
   nodemailerTransporter.sendMail(
     {
       from: {
-        name: "Eco Built",
-        address: "support@ecobuilt.com",
+        name: env.APP_NAME,
+        address: env.APP_SUPPORT_EMAIL,
       },
       to,
       subject: "Verify Your Email",
