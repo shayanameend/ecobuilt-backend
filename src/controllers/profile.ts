@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { handleErrors } from "~/lib/error";
 
+import { handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import { createProfileSchema, updateProfileSchema } from "~/validators/profile";
 
@@ -34,6 +34,15 @@ async function getProfile(request: Request, response: Response) {
       },
     });
 
+    if (!profile) {
+      return response.notFound(
+        {},
+        {
+          message: "Profile Not Found!",
+        },
+      );
+    }
+
     return response.success(
       {
         data: { user: profile?.user },
@@ -50,6 +59,19 @@ async function getProfile(request: Request, response: Response) {
 async function createProfile(request: Request, response: Response) {
   try {
     const { firstName, lastName } = createProfileSchema.parse(request.body);
+
+    const existingProfile = await prisma.profile.findUnique({
+      where: {
+        userId: request.user.id,
+      },
+    });
+
+    if (existingProfile) {
+      return response.badRequest(
+        { data: {} },
+        { message: "Profile Already Exists!" },
+      );
+    }
 
     const profile = await prisma.profile.create({
       data: {
@@ -101,6 +123,19 @@ async function createProfile(request: Request, response: Response) {
 async function updateProfile(request: Request, response: Response) {
   try {
     const { firstName, lastName } = updateProfileSchema.parse(request.body);
+
+    const existingProfile = await prisma.profile.findUnique({
+      where: {
+        userId: request.user.id,
+      },
+    });
+
+    if (!existingProfile) {
+      return response.badRequest(
+        { data: {} },
+        { message: "Profile Not Found!" },
+      );
+    }
 
     const profile = await prisma.profile.update({
       where: {

@@ -9,7 +9,7 @@ import { verifyRequest } from "~/middlewares/auth";
 
 const profileRouter = Router();
 
-profileRouter.post(
+profileRouter.get(
   "/",
   verifyRequest({
     isVerified: true,
