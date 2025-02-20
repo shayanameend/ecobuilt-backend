@@ -72,7 +72,7 @@ async function updateCategory(request: Request, response: Response) {
     });
 
     if (!category) {
-      throw new BadResponse("Category not found!");
+      throw new BadResponse("Category Not Found!");
     }
 
     return response.success(
@@ -100,7 +100,7 @@ async function deleteCategory(request: Request, response: Response) {
     });
 
     if (!category) {
-      throw new BadResponse("Category not found!");
+      throw new BadResponse("Category Not Found!");
     }
 
     return response.success(
