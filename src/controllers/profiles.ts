@@ -2,7 +2,10 @@ import type { Request, Response } from "express";
 
 import { handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import { createProfileSchema, updateProfileSchema } from "~/validators/profile";
+import {
+  createProfileSchema,
+  updateProfileSchema,
+} from "~/validators/profiles";
 
 async function getProfile(request: Request, response: Response) {
   try {

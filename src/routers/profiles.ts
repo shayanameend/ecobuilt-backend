@@ -4,7 +4,7 @@ import {
   createProfile,
   getProfile,
   updateProfile,
-} from "~/controllers/profile";
+} from "~/controllers/profiles";
 import { verifyRequest } from "~/middlewares/auth";
 
 const profileRouter = Router();
