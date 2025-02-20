@@ -50,6 +50,23 @@ model Otp {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
+model File {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orignialName String  @map("orignial_name")
+  name         String
+  type         String
+  size         Int
+  url          String
+  isDeleted    Boolean @default(false) @map("is_deleted")
+
+  productId String  @map("product_id") @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
 model Profile {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
@@ -58,6 +75,53 @@ model Profile {
 
   userId String @unique @map("user_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name      String
+  isDeleted Boolean @default(false) @map("is_deleted")
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Vendor {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name      String
+  isDeleted Boolean @default(false) @map("is_deleted")
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Product {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name        String
+  description String
+  price       Float
+  salePrice   Float?  @map("sale_price")
+  sku         String
+  stock       Int
+  isDeleted   Boolean @default(false) @map("is_deleted")
+
+  images File[]
+
+  categoryId String   @map("category_id") @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  vendorId String @map("vendor_id") @db.ObjectId
+  vendor   Vendor @relation(fields: [vendorId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
