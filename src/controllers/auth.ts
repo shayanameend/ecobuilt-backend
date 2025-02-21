@@ -17,7 +17,9 @@ import {
 
 async function signUp(request: Request, response: Response) {
   try {
-    request.body.email = request.body.email.toLowerCase();
+    if (request.body.emai) {
+      request.body.email = request.body.email.toLowerCase();
+    }
 
     const { email, password, role } = signUpSchema.parse(request.body);
 
