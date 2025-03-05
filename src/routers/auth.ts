@@ -1,9 +1,9 @@
 import { Router } from "express";
 
 import {
+  forgotPassword,
   refresh,
   resendOtp,
-  resetPassword,
   signIn,
   signUp,
   updatePassword,
@@ -17,7 +17,7 @@ authRouter.post("/sign-up", signUp);
 
 authRouter.post("/sign-in", signIn);
 
-authRouter.post("/reset-password", resetPassword);
+authRouter.post("/forgot-password", forgotPassword);
 
 authRouter.post("/resend-otp", verifyRequest({}), resendOtp);
 

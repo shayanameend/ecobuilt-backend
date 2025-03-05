@@ -169,7 +169,7 @@ async function signIn(request: Request, response: Response) {
   }
 }
 
-async function resetPassword(request: Request, response: Response) {
+async function forgotPassword(request: Request, response: Response) {
   try {
     request.body.email = request.body.email.toLowerCase();
 
@@ -379,7 +379,7 @@ async function refresh(request: Request, response: Response) {
 export {
   signUp,
   signIn,
-  resetPassword,
+  forgotPassword,
   resendOtp,
   verifyOtp,
   updatePassword,
