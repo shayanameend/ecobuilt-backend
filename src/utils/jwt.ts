@@ -5,11 +5,7 @@ import jwt from "jsonwebtoken";
 import { env } from "~/lib/env";
 
 async function signToken(payload: {
-  id: string;
   email: string;
-  role: Role;
-  isVerified: boolean;
-  updatedAt: Date;
 }) {
   // @ts-ignore
   return jwt.sign(payload, env.JWT_SECRET, {

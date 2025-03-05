@@ -8,9 +8,10 @@ datasource db {
 }
 
 enum Role {
+  SUPER_ADMIN
   ADMIN
-  SELLER
-  BUYER
+  VENDOR
+  USER
 }
 
 model User {
@@ -18,7 +19,6 @@ model User {
 
   email      String  @unique
   password   String
-  role       Role    @default(BUYER)
   isVerified Boolean @default(false) @map("is_verified")
   isDeleted  Boolean @default(false) @map("is_deleted")
 
@@ -44,7 +44,7 @@ model Otp {
   type OtpType @default(VERIFY_EMAIL)
 
   userId String @unique @map("user_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -60,9 +60,6 @@ model File {
   url          String
   isDeleted    Boolean @default(false) @map("is_deleted")
 
-  productId String  @map("product_id") @db.ObjectId
-  product   Product @relation(fields: [productId], references: [id])
-
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
@@ -70,58 +67,12 @@ model File {
 model Profile {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  firstName String @map("first_name")
-  lastName  String @map("last_name")
+  name  String
+  role  Role   @default(USER)
+  phone String
 
   userId String @unique @map("user_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-}
-
-model Category {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  name      String
-  isDeleted Boolean @default(false) @map("is_deleted")
-
-  products Product[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-}
-
-model Vendor {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  name      String
-  isDeleted Boolean @default(false) @map("is_deleted")
-
-  products Product[]
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-}
-
-model Product {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  name        String
-  description String
-  price       Float
-  salePrice   Float?  @map("sale_price")
-  sku         String
-  stock       Int
-  isDeleted   Boolean @default(false) @map("is_deleted")
-
-  images File[]
-
-  categoryId String   @map("category_id") @db.ObjectId
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  vendorId String @map("vendor_id") @db.ObjectId
-  vendor   Vendor @relation(fields: [vendorId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")

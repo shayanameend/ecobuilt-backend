@@ -7,9 +7,6 @@ import morgan from "morgan";
 import { verifyRequest } from "~/middlewares/auth";
 import { expandResponse } from "~/middlewares/response";
 import { authRouter } from "~/routers/auth";
-import { categoriesRouter } from "./routers/categories";
-import { profileRouter } from "./routers/profiles";
-import { vendorsRouter } from "./routers/vendors";
 
 const app = express();
 
@@ -29,9 +26,6 @@ app.use(
 app.use(expandResponse);
 
 app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
-app.use("/categories", categoriesRouter);
-app.use("/vendors", vendorsRouter);
 
 app.get("/test", verifyRequest({ isVerified: true }), (_request, response) => {
   response.success({}, { message: "Test route!" });

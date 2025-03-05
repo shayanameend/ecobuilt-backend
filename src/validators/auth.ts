@@ -19,11 +19,6 @@ const signUpSchema = zod.object({
     .max(32, {
       message: "Password must be at most 32 characters long",
     }),
-  role: zod
-    .enum([Role.ADMIN, Role.SELLER, Role.BUYER], {
-      message: "Role must be either 'ADMIN', 'SELLER' or 'BUYER'",
-    })
-    .optional(),
 });
 
 const signInSchema = zod.object({
@@ -44,11 +39,6 @@ const signInSchema = zod.object({
     .max(32, {
       message: "Password must be at most 32 characters long",
     }),
-  role: zod
-    .enum([Role.ADMIN, Role.SELLER, Role.BUYER], {
-      message: "Role must be either 'ADMIN', 'SELLER' or 'BUYER'",
-    })
-    .optional(),
 });
 
 const resetPasswordSchema = zod.object({
@@ -59,11 +49,6 @@ const resetPasswordSchema = zod.object({
     .email({
       message: "Invalid Email",
     }),
-  role: zod
-    .enum([Role.ADMIN, Role.SELLER, Role.BUYER], {
-      message: "Role must be either 'ADMIN', 'SELLER' or 'BUYER'",
-    })
-    .optional(),
 });
 
 const verifyOtpSchema = zod.object({

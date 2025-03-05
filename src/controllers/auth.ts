@@ -21,10 +21,10 @@ async function signUp(request: Request, response: Response) {
       request.body.email = request.body.email.toLowerCase();
     }
 
-    const { email, password, role } = signUpSchema.parse(request.body);
+    const { email, password } = signUpSchema.parse(request.body);
 
     const existingUser = await prisma.user.findUnique({
-      where: { email, role },
+      where: { email },
     });
 
     if (existingUser) {
@@ -37,7 +37,6 @@ async function signUp(request: Request, response: Response) {
       data: {
         email,
         password: hashedPassword,
-        role,
       },
     });
 
@@ -74,11 +73,7 @@ async function signUp(request: Request, response: Response) {
     });
 
     const token = await signToken({
-      id: user.id,
       email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-      updatedAt: user.updatedAt,
     });
 
     return response.created(
@@ -98,10 +93,10 @@ async function signIn(request: Request, response: Response) {
   try {
     request.body.email = request.body.email.toLowerCase();
 
-    const { email, password, role } = signInSchema.parse(request.body);
+    const { email, password } = signInSchema.parse(request.body);
 
     const user = await prisma.user.findUnique({
-      where: { email, role },
+      where: { email },
     });
 
     if (!user) {
@@ -115,11 +110,7 @@ async function signIn(request: Request, response: Response) {
     }
 
     const token = await signToken({
-      id: user.id,
       email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-      updatedAt: user.updatedAt,
     });
 
     if (!user.isVerified) {
@@ -182,10 +173,10 @@ async function resetPassword(request: Request, response: Response) {
   try {
     request.body.email = request.body.email.toLowerCase();
 
-    const { email, role } = resetPasswordSchema.parse(request.body);
+    const { email } = resetPasswordSchema.parse(request.body);
 
     const user = await prisma.user.findUnique({
-      where: { email, role },
+      where: { email },
     });
 
     if (!user) {
@@ -225,11 +216,7 @@ async function resetPassword(request: Request, response: Response) {
     });
 
     const token = await signToken({
-      id: user.id,
       email: user.email,
-      role: user.role,
-      isVerified: user.isVerified,
-      updatedAt: user.updatedAt,
     });
 
     return response.success(
@@ -324,11 +311,7 @@ async function verifyOtp(request: Request, response: Response) {
     });
 
     const token = await signToken({
-      id: request.user.id,
       email: request.user.email,
-      role: request.user.role,
-      isVerified: true,
-      updatedAt: request.user.updatedAt,
     });
 
     return response.success(
@@ -371,11 +354,7 @@ async function updatePassword(request: Request, response: Response) {
 async function refresh(request: Request, response: Response) {
   try {
     const token = await signToken({
-      id: request.user.id,
       email: request.user.email,
-      role: request.user.role,
-      isVerified: request.user.isVerified,
-      updatedAt: request.user.updatedAt,
     });
 
     // @ts-ignore
