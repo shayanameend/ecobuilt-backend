@@ -39,7 +39,7 @@ function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
 
       const user = await prisma.user.findUnique({
         where: {
-          id: decodedUser.email,
+          email: decodedUser.email,
         },
         select: {
           id: true,
