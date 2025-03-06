@@ -1,4 +1,4 @@
-import { OtpType, Role } from "@prisma/client";
+import { OtpType } from "@prisma/client";
 import { default as zod } from "zod";
 
 const signUpSchema = zod.object({

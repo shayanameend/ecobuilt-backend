@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 
+import { OtpType } from "@prisma/client";
 import { default as argon } from "argon2";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
@@ -54,11 +55,11 @@ async function signUp(request: Request, response: Response) {
       },
       update: {
         code,
-        type: "VERIFY_EMAIL",
+        type: OtpType.VERIFY_EMAIL,
       },
       create: {
         code,
-        type: "VERIFY_EMAIL",
+        type: OtpType.VERIFY_EMAIL,
         user: {
           connect: {
             id: user.id,
@@ -128,11 +129,11 @@ async function signIn(request: Request, response: Response) {
         },
         update: {
           code,
-          type: "VERIFY_EMAIL",
+          type: OtpType.VERIFY_EMAIL,
         },
         create: {
           code,
-          type: "VERIFY_EMAIL",
+          type: OtpType.VERIFY_EMAIL,
           user: {
             connect: {
               id: user.id,
@@ -197,11 +198,11 @@ async function forgotPassword(request: Request, response: Response) {
       },
       update: {
         code,
-        type: "RESET_PASSWORD",
+        type: OtpType.RESET_PASSWORD,
       },
       create: {
         code,
-        type: "RESET_PASSWORD",
+        type: OtpType.RESET_PASSWORD,
         user: {
           connect: {
             id: user.id,
@@ -298,7 +299,7 @@ async function verifyOtp(request: Request, response: Response) {
       throw new BadResponse("Invalid OTP!");
     }
 
-    if (type === "VERIFY_EMAIL") {
+    if (type === OtpType.VERIFY_EMAIL) {
       await prisma.user.update({
         where: { id: request.user.id },
         data: { isVerified: true },
