@@ -33,19 +33,13 @@ function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
         throw new UnauthorizedResponse("Unauthorized!");
       }
 
-      const decodedUser = (await verifyToken(token)) as User;
-
-      if (role && decodedUser.role !== role) {
-        throw new ForbiddenResponse("Forbidden!");
-      }
-
-      if (isVerified && !decodedUser.isVerified) {
-        throw new BadResponse("User Not Verified!");
-      }
+      const decodedUser = (await verifyToken(token)) as {
+        email: string;
+      };
 
       const user = await prisma.user.findUnique({
         where: {
-          id: decodedUser.id,
+          id: decodedUser.email,
         },
         select: {
           id: true,
@@ -67,6 +61,14 @@ function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
           },
         },
       });
+
+      if (role && user?.role !== role) {
+        throw new ForbiddenResponse("Forbidden!");
+      }
+
+      if (isVerified && !user?.isVerified) {
+        throw new BadResponse("User Not Verified!");
+      }
 
       if (!user) {
         throw new NotFoundResponse("User Not Found!");
