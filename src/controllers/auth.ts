@@ -8,7 +8,8 @@ import { prisma } from "~/lib/prisma";
 import { sendOTP } from "~/services/mail";
 import { signToken } from "~/utils/jwt";
 import {
-  resetPasswordSchema,
+  forgotPasswordSchema,
+  resendOtpSchema,
   signInSchema,
   signUpSchema,
   updatePasswordSchema,
@@ -173,7 +174,7 @@ async function forgotPassword(request: Request, response: Response) {
   try {
     request.body.email = request.body.email.toLowerCase();
 
-    const { email } = resetPasswordSchema.parse(request.body);
+    const { email } = forgotPasswordSchema.parse(request.body);
 
     const user = await prisma.user.findUnique({
       where: { email },
@@ -234,6 +235,8 @@ async function forgotPassword(request: Request, response: Response) {
 
 async function resendOtp(request: Request, response: Response) {
   try {
+    const { type } = resendOtpSchema.parse(request.body);
+
     const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     let code = "";
@@ -248,11 +251,11 @@ async function resendOtp(request: Request, response: Response) {
       },
       update: {
         code,
-        type: OtpType.VERIFY_EMAIL,
+        type,
       },
       create: {
         code,
-        type: OtpType.VERIFY_EMAIL,
+        type,
         user: {
           connect: {
             id: request.user.id,

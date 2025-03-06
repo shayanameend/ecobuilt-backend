@@ -41,7 +41,7 @@ const signInSchema = zod.object({
     }),
 });
 
-const resetPasswordSchema = zod.object({
+const forgotPasswordSchema = zod.object({
   email: zod
     .string({
       message: "Invalid Email",
@@ -49,6 +49,14 @@ const resetPasswordSchema = zod.object({
     .email({
       message: "Invalid Email",
     }),
+});
+
+const resendOtpSchema = zod.object({
+  type: zod
+    .enum([OtpType.VERIFY_EMAIL, OtpType.RESET_PASSWORD], {
+      message: "Invalid Type",
+    })
+    .default(OtpType.VERIFY_EMAIL),
 });
 
 const verifyOtpSchema = zod.object({
@@ -82,7 +90,8 @@ const updatePasswordSchema = zod.object({
 export {
   signUpSchema,
   signInSchema,
-  resetPasswordSchema,
+  forgotPasswordSchema,
+  resendOtpSchema,
   verifyOtpSchema,
   updatePasswordSchema,
 };
