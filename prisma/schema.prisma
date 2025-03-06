@@ -50,26 +50,12 @@ model Otp {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
-model File {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  orignialName String  @map("orignial_name")
-  name         String
-  type         String
-  size         Int
-  url          String
-  isDeleted    Boolean @default(false) @map("is_deleted")
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-}
-
 model Profile {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   name  String
-  role  Role   @default(USER)
   phone String
+  role  Role   @default(USER)
 
   userId String @unique @map("user_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)

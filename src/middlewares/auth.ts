@@ -1,4 +1,4 @@
-import type { Role, User } from "@prisma/client";
+import type { OtpType, Role } from "@prisma/client";
 import type { NextFunction, Request, Response } from "express";
 
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
@@ -14,11 +14,16 @@ import { prisma } from "~/lib/prisma";
 import { verifyToken } from "~/utils/jwt";
 
 interface VerifyRequestParams {
-  role?: Role;
-  isVerified?: boolean;
+  type?: OtpType | null;
+  role?: Role | null;
+  isVerified?: boolean | null;
 }
 
-function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
+function verifyRequest({
+  type,
+  isVerified,
+  role,
+}: Readonly<VerifyRequestParams> = {}) {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
       const bearerToken = request.headers.authorization;
@@ -35,7 +40,12 @@ function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
 
       const decodedUser = (await verifyToken(token)) as {
         email: string;
+        type: OtpType;
       };
+
+      if (type && decodedUser.type !== type) {
+        throw new ForbiddenResponse("Forbidden!");
+      }
 
       const user = await prisma.user.findUnique({
         where: {
@@ -45,7 +55,6 @@ function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
           id: true,
           email: true,
           password: true,
-          role: true,
           isVerified: true,
           isDeleted: true,
           createdAt: true,
@@ -53,8 +62,9 @@ function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
           profile: {
             select: {
               id: true,
-              firstName: true,
-              lastName: true,
+              name: true,
+              phone: true,
+              role: true,
               createdAt: true,
               updatedAt: true,
             },
@@ -62,16 +72,16 @@ function verifyRequest({ role, isVerified }: Readonly<VerifyRequestParams>) {
         },
       });
 
-      if (role && user?.role !== role) {
-        throw new ForbiddenResponse("Forbidden!");
+      if (!user) {
+        throw new NotFoundResponse("User Not Found!");
       }
 
       if (isVerified && !user?.isVerified) {
         throw new BadResponse("User Not Verified!");
       }
 
-      if (!user) {
-        throw new NotFoundResponse("User Not Found!");
+      if (role && user?.profile?.role !== role) {
+        throw new ForbiddenResponse("Forbidden!");
       }
 
       request.user = user;

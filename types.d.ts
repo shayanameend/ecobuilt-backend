@@ -1,4 +1,4 @@
-import type { Role } from "@prisma/client";
+import type { OtpType, Role } from "@prisma/client";
 
 export type JSON =
   | number
@@ -26,9 +26,18 @@ declare global {
         id: string;
         email: string;
         password: string;
-        role: Role;
         isVerified: boolean;
+        isDeleted: boolean;
+        createdAt: Date;
         updatedAt: Date;
+        profile: {
+          id: string;
+          name: string;
+          phone: string;
+          role: $Enums.Role;
+          createdAt: Date;
+          updatedAt: Date;
+        } | null;
       };
     }
     export interface Response {

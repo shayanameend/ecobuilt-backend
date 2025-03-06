@@ -19,15 +19,22 @@ authRouter.post("/sign-in", signIn);
 
 authRouter.post("/forgot-password", forgotPassword);
 
-authRouter.post("/resend-otp", verifyRequest({}), resendOtp);
+authRouter.post("/resend-otp", verifyRequest(), resendOtp);
 
-authRouter.post("/verify-otp", verifyRequest({}), verifyOtp);
+authRouter.post("/verify-otp", verifyRequest(), verifyOtp);
 
-authRouter.post("/update-password", verifyRequest({}), updatePassword);
+authRouter.post(
+  "/update-password",
+  verifyRequest({
+    type: "RESET_PASSWORD",
+  }),
+  updatePassword,
+);
 
 authRouter.post(
   "/refresh",
   verifyRequest({
+    type: "VERIFY_EMAIL",
     isVerified: true,
   }),
   refresh,

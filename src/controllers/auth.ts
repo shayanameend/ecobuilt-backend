@@ -75,6 +75,7 @@ async function signUp(request: Request, response: Response) {
 
     const token = await signToken({
       email: user.email,
+      type: OtpType.VERIFY_EMAIL,
     });
 
     return response.created(
@@ -112,6 +113,7 @@ async function signIn(request: Request, response: Response) {
 
     const token = await signToken({
       email: user.email,
+      type: OtpType.VERIFY_EMAIL,
     });
 
     if (!user.isVerified) {
@@ -218,6 +220,7 @@ async function forgotPassword(request: Request, response: Response) {
 
     const token = await signToken({
       email: user.email,
+      type: OtpType.RESET_PASSWORD,
     });
 
     return response.success(
@@ -315,6 +318,7 @@ async function verifyOtp(request: Request, response: Response) {
 
     const token = await signToken({
       email: request.user.email,
+      type: OtpType.VERIFY_EMAIL,
     });
 
     return response.success(
@@ -358,10 +362,8 @@ async function refresh(request: Request, response: Response) {
   try {
     const token = await signToken({
       email: request.user.email,
+      type: OtpType.VERIFY_EMAIL,
     });
-
-    // @ts-ignore
-    request.user.password = undefined;
 
     return response.success(
       {
