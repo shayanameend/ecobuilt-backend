@@ -23,7 +23,7 @@ async function signUp(request: Request, response: Response) {
 
     const { email, password } = signUpSchema.parse(request.body);
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.auth.findUnique({
       where: { email },
     });
 
@@ -33,7 +33,7 @@ async function signUp(request: Request, response: Response) {
 
     const hashedPassword = await argon.hash(password);
 
-    const user = await prisma.user.create({
+    const auth = await prisma.auth.create({
       data: {
         email,
         password: hashedPassword,
@@ -50,7 +50,7 @@ async function signUp(request: Request, response: Response) {
 
     const otp = await prisma.otp.upsert({
       where: {
-        userId: user.id,
+        authId: auth.id,
       },
       update: {
         code,
@@ -59,21 +59,21 @@ async function signUp(request: Request, response: Response) {
       create: {
         code,
         type: "VERIFY",
-        user: {
+        auth: {
           connect: {
-            id: user.id,
+            id: auth.id,
           },
         },
       },
     });
 
     await sendOTP({
-      to: user.email,
+      to: auth.email,
       code: otp.code,
     });
 
     const token = await signToken({
-      email: user.email,
+      email: auth.email,
       type: "VERIFY",
     });
 
@@ -96,7 +96,7 @@ async function signIn(request: Request, response: Response) {
 
     const { email, password } = signInSchema.parse(request.body);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.auth.findUnique({
       where: { email },
     });
 
@@ -121,7 +121,7 @@ async function signIn(request: Request, response: Response) {
 
       const otp = await prisma.otp.upsert({
         where: {
-          userId: user.id,
+          authId: user.id,
         },
         update: {
           code,
@@ -130,7 +130,7 @@ async function signIn(request: Request, response: Response) {
         create: {
           code,
           type: "VERIFY",
-          user: {
+          auth: {
             connect: {
               id: user.id,
             },
@@ -182,7 +182,7 @@ async function forgotPassword(request: Request, response: Response) {
 
     const { email } = forgotPasswordSchema.parse(request.body);
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.auth.findUnique({
       where: { email },
     });
 
@@ -200,7 +200,7 @@ async function forgotPassword(request: Request, response: Response) {
 
     const otp = await prisma.otp.upsert({
       where: {
-        userId: user.id,
+        authId: user.id,
       },
       update: {
         code,
@@ -209,7 +209,7 @@ async function forgotPassword(request: Request, response: Response) {
       create: {
         code,
         type: "RESET",
-        user: {
+        auth: {
           connect: {
             id: user.id,
           },
@@ -254,7 +254,7 @@ async function resendOtp(request: Request, response: Response) {
 
     const otp = await prisma.otp.upsert({
       where: {
-        userId: request.user.id,
+        authId: request.user.id,
       },
       update: {
         code,
@@ -263,7 +263,7 @@ async function resendOtp(request: Request, response: Response) {
       create: {
         code,
         type,
-        user: {
+        auth: {
           connect: {
             id: request.user.id,
           },
@@ -293,7 +293,7 @@ async function verifyOtp(request: Request, response: Response) {
 
     const existingOtp = await prisma.otp.findUnique({
       where: {
-        userId: request.user.id,
+        authId: request.user.id,
         type,
       },
     });
@@ -307,7 +307,7 @@ async function verifyOtp(request: Request, response: Response) {
     }
 
     if (type === "VERIFY") {
-      await prisma.user.update({
+      await prisma.auth.update({
         where: { id: request.user.id },
         data: { isVerified: true },
       });
@@ -315,7 +315,7 @@ async function verifyOtp(request: Request, response: Response) {
 
     await prisma.otp.delete({
       where: {
-        userId: request.user.id,
+        authId: request.user.id,
         type,
       },
     });
@@ -344,7 +344,7 @@ async function updatePassword(request: Request, response: Response) {
 
     const hashedPassword = await argon.hash(password);
 
-    await prisma.user.update({
+    await prisma.auth.update({
       where: { id: request.user.id },
       data: { password: hashedPassword },
     });

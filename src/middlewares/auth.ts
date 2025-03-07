@@ -57,7 +57,7 @@ function verifyRequest(
         throw new ForbiddenResponse("Forbidden!");
       }
 
-      const user = await prisma.user.findUnique({
+      const user = await prisma.auth.findUnique({
         where: {
           email: decodedUser.email,
         },

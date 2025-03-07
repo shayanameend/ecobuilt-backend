@@ -21,7 +21,7 @@ enum UserStatus {
   REJECTED
 }
 
-model User {
+model Auth {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   email      String     @unique
@@ -33,6 +33,10 @@ model User {
 
   otpId String? @map("otp_id") @db.ObjectId
   otp   Otp?
+
+  adminProfile  AdminProfile?
+  vendorProfile VendorProfile?
+  userProfile   UserProfile?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -49,8 +53,179 @@ model Otp {
   code String
   type OtpType @default(VERIFY)
 
-  userId String @unique @map("user_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model AdminProfile {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureUrl String @map("picture_url")
+  name       String
+  phone      String
+
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model VendorProfile {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureUrl    String @map("picture_url")
+  name          String
+  description   String
+  phone         String
+  postalCode    String @map("postal_code")
+  city          String
+  pickupAddress String @map("pickup_address")
+
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model UserProfile {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureUrl      String @map("picture_url")
+  name            String
+  phone           String
+  postalCode      String @map("postal_code")
+  city            String
+  deliveryAddress String @map("delivery_address")
+
+  authId String @unique @map("user_id") @db.ObjectId
+  auth   Auth   @relation(fields: [authId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  orders  Order[]
+  reviews Review[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum CategoryStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Category {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name      String
+  status    CategoryStatus @default(PENDING)
+  isDeleted Boolean        @default(false) @map("is_deleted")
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Product {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  pictureUrls String[] @map("picture_urls")
+  name        String
+  description String
+  sku         String
+  stock       Int
+  price       Float
+  salePrice   Float?   @map("sale_price")
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+
+  categoryId String   @map("category_id") @db.ObjectId
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  vendorId String        @map("vendor_id") @db.ObjectId
+  vendor   VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  orderToProduct OrderToProduct[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+enum OrderStatus {
+  PENDING
+  REJECTED
+  APPROVED
+  CANCELLED
+  PROCESSING
+  IN_TRANSIT
+  DELIVERED
+}
+
+model Order {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  status    OrderStatus @default(PENDING)
+  isDeleted Boolean     @default(false) @map("is_deleted")
+
+  orderToProduct OrderToProduct[]
+  shipping       Shipping?
+
+  userId String      @map("user_id") @db.ObjectId
+  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model OrderToProduct {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  price    Float
+  quantity Int
+
+  orderId String @map("order_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  productId String  @map("product_id") @db.ObjectId
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  review Review?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Shipping {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  orderId String @unique @map("order_id") @db.ObjectId
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  status    OrderStatus @default(PENDING)
+  isDeleted Boolean     @default(false) @map("is_deleted")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+}
+
+model Review {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  rating    Int
+  comment   String
+  isDeleted Boolean @default(false) @map("is_deleted")
+
+  productId String         @unique @map("product_id") @db.ObjectId
+  product   OrderToProduct @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  userId String      @map("user_id") @db.ObjectId
+  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
