@@ -152,7 +152,10 @@ async function signIn(request: Request, response: Response) {
 
       return response.success(
         {
-          data: { token },
+          data: {
+            token,
+            user,
+          },
         },
         {
           message: "OTP Sent Successfully!",
@@ -311,7 +314,7 @@ async function verifyOtp(request: Request, response: Response) {
     }
 
     if (type === "VERIFY") {
-      await prisma.auth.update({
+      request.user = await prisma.auth.update({
         where: { id: request.user.id },
         data: { isVerified: true },
       });
@@ -326,12 +329,15 @@ async function verifyOtp(request: Request, response: Response) {
 
     const token = await signToken({
       email: request.user.email,
-      type: "ACCESS",
+      type: type === "VERIFY" ? "ACCESS" : type,
     });
 
     return response.success(
       {
-        data: { token },
+        data: {
+          token,
+          user: type === "VERIFY" ? request.user : undefined,
+        },
       },
       {
         message: "OTP Verified Successfully!",
@@ -376,8 +382,8 @@ async function refresh(request: Request, response: Response) {
     return response.success(
       {
         data: {
-          user: request.user,
           token,
+          user: request.user,
         },
       },
       {
