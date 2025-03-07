@@ -188,7 +188,6 @@ async function signIn(request: Request, response: Response) {
         {
           data: {
             token,
-            user,
           },
         },
         {
@@ -204,7 +203,10 @@ async function signIn(request: Request, response: Response) {
 
     return response.success(
       {
-        data: { token },
+        data: {
+          token,
+          user,
+        },
       },
       {
         message: "Sign In Successfull!",
