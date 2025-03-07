@@ -34,9 +34,9 @@ model Auth {
   otpId String? @map("otp_id") @db.ObjectId
   otp   Otp?
 
-  adminProfile  AdminProfile?
-  vendorProfile VendorProfile?
-  userProfile   UserProfile?
+  admin  Admin?
+  vendor Vendor?
+  user   User?
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -60,7 +60,7 @@ model Otp {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
-model AdminProfile {
+model Admin {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   pictureUrl String @map("picture_url")
@@ -74,7 +74,7 @@ model AdminProfile {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
-model VendorProfile {
+model Vendor {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   pictureUrl    String @map("picture_url")
@@ -94,7 +94,7 @@ model VendorProfile {
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 }
 
-model UserProfile {
+model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   pictureUrl      String @map("picture_url")
@@ -148,8 +148,8 @@ model Product {
   categoryId String   @map("category_id") @db.ObjectId
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  vendorId String        @map("vendor_id") @db.ObjectId
-  vendor   VendorProfile @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  vendorId String @map("vendor_id") @db.ObjectId
+  vendor   Vendor @relation(fields: [vendorId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   orderToProduct OrderToProduct[]
 
@@ -176,8 +176,8 @@ model Order {
   orderToProduct OrderToProduct[]
   shipping       Shipping?
 
-  userId String      @map("user_id") @db.ObjectId
-  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @map("user_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
@@ -223,8 +223,8 @@ model Review {
   productId String         @unique @map("product_id") @db.ObjectId
   product   OrderToProduct @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  userId String      @map("user_id") @db.ObjectId
-  user   UserProfile @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @map("user_id") @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
