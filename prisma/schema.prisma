@@ -8,6 +8,7 @@ datasource db {
 }
 
 enum Role {
+  UNSPECIFIED
   SUPER_ADMIN
   ADMIN
   VENDOR
@@ -19,11 +20,9 @@ model User {
 
   email      String  @unique
   password   String
+  role       Role    @default(UNSPECIFIED)
   isVerified Boolean @default(false) @map("is_verified")
   isDeleted  Boolean @default(false) @map("is_deleted")
-
-  profileId String?  @map("profile_id") @db.ObjectId
-  profile   Profile?
 
   otpId String? @map("otp_id") @db.ObjectId
   otp   Otp?
@@ -42,20 +41,6 @@ model Otp {
 
   code String
   type OtpType @default(VERIFY)
-
-  userId String @unique @map("user_id") @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
-}
-
-model Profile {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
-  name  String
-  phone String
-  role  Role   @default(USER)
 
   userId String @unique @map("user_id") @db.ObjectId
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
