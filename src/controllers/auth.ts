@@ -25,6 +25,16 @@ async function signUp(request: Request, response: Response) {
 
     const existingUser = await prisma.auth.findUnique({
       where: { email },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+        role: true,
+        isVerified: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (existingUser) {
@@ -37,6 +47,16 @@ async function signUp(request: Request, response: Response) {
       data: {
         email,
         password: hashedPassword,
+      },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+        role: true,
+        isVerified: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
       },
     });
 
@@ -100,6 +120,17 @@ async function signIn(request: Request, response: Response) {
 
     const user = await prisma.auth.findUnique({
       where: { email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        status: true,
+        role: true,
+        isVerified: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (!user) {
@@ -150,6 +181,9 @@ async function signIn(request: Request, response: Response) {
         type: "VERIFY",
       });
 
+      // @ts-ignore
+      user.password = undefined;
+
       return response.success(
         {
           data: {
@@ -191,6 +225,16 @@ async function forgotPassword(request: Request, response: Response) {
 
     const user = await prisma.auth.findUnique({
       where: { email },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+        role: true,
+        isVerified: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     if (!user) {
@@ -317,6 +361,16 @@ async function verifyOtp(request: Request, response: Response) {
       request.user = await prisma.auth.update({
         where: { id: request.user.id },
         data: { isVerified: true },
+        select: {
+          id: true,
+          email: true,
+          status: true,
+          role: true,
+          isVerified: true,
+          isDeleted: true,
+          createdAt: true,
+          updatedAt: true,
+        },
       });
     }
 
@@ -357,6 +411,16 @@ async function updatePassword(request: Request, response: Response) {
     await prisma.auth.update({
       where: { id: request.user.id },
       data: { password: hashedPassword },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+        role: true,
+        isVerified: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
 
     return response.success(
