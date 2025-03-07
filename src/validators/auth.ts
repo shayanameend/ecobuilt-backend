@@ -1,7 +1,7 @@
 import { OtpType } from "@prisma/client";
 import { default as zod } from "zod";
 
-const signUpSchema = zod.object({
+const signUpBodySchema = zod.object({
   email: zod
     .string({
       message: "Invalid Email",
@@ -14,14 +14,14 @@ const signUpSchema = zod.object({
       message: "Invalid Password",
     })
     .min(8, {
-      message: "Password must be at least 8 characters long",
+      message: "Password is too short",
     })
     .max(32, {
-      message: "Password must be at most 32 characters long",
+      message: "Password is too long",
     }),
 });
 
-const signInSchema = zod.object({
+const signInBodySchema = zod.object({
   email: zod
     .string({
       message: "Invalid Email",
@@ -34,14 +34,14 @@ const signInSchema = zod.object({
       message: "Invalid Password",
     })
     .min(8, {
-      message: "Password must be at least 8 characters long",
+      message: "Password is too short",
     })
     .max(32, {
-      message: "Password must be at most 32 characters long",
+      message: "Password is too long",
     }),
 });
 
-const forgotPasswordSchema = zod.object({
+const forgotPasswordBodySchema = zod.object({
   email: zod
     .string({
       message: "Invalid Email",
@@ -51,7 +51,7 @@ const forgotPasswordSchema = zod.object({
     }),
 });
 
-const resendOtpSchema = zod.object({
+const resendOtpBodySchema = zod.object({
   type: zod
     .enum([OtpType.VERIFY, OtpType.RESET], {
       message: "Invalid Type",
@@ -59,13 +59,13 @@ const resendOtpSchema = zod.object({
     .default(OtpType.VERIFY),
 });
 
-const verifyOtpSchema = zod.object({
+const verifyOtpBodySchema = zod.object({
   otp: zod
     .string({
       message: "Invalid OTP",
     })
     .length(6, {
-      message: "OTP must be 6 characters long",
+      message: "Invalid OTP",
     }),
   type: zod
     .enum([OtpType.VERIFY, OtpType.RESET], {
@@ -74,24 +74,24 @@ const verifyOtpSchema = zod.object({
     .default(OtpType.VERIFY),
 });
 
-const updatePasswordSchema = zod.object({
+const updatePasswordBodySchema = zod.object({
   password: zod
     .string({
       message: "Invalid Password",
     })
     .min(8, {
-      message: "Password must be at least 8 characters long",
+      message: "Password is too short",
     })
     .max(32, {
-      message: "Password must be at most 32 characters long",
+      message: "Password is too long",
     }),
 });
 
 export {
-  signUpSchema,
-  signInSchema,
-  forgotPasswordSchema,
-  resendOtpSchema,
-  verifyOtpSchema,
-  updatePasswordSchema,
+  signUpBodySchema,
+  signInBodySchema,
+  forgotPasswordBodySchema,
+  resendOtpBodySchema,
+  verifyOtpBodySchema,
+  updatePasswordBodySchema,
 };

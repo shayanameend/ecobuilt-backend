@@ -7,12 +7,12 @@ import { prisma } from "~/lib/prisma";
 import { sendOTP } from "~/services/mail";
 import { signToken } from "~/utils/jwt";
 import {
-  forgotPasswordSchema,
-  resendOtpSchema,
-  signInSchema,
-  signUpSchema,
-  updatePasswordSchema,
-  verifyOtpSchema,
+  forgotPasswordBodySchema,
+  resendOtpBodySchema,
+  signInBodySchema,
+  signUpBodySchema,
+  updatePasswordBodySchema,
+  verifyOtpBodySchema,
 } from "~/validators/auth";
 
 async function signUp(request: Request, response: Response) {
@@ -21,7 +21,7 @@ async function signUp(request: Request, response: Response) {
       request.body.email = request.body.email.toLowerCase();
     }
 
-    const { email, password } = signUpSchema.parse(request.body);
+    const { email, password } = signUpBodySchema.parse(request.body);
 
     const existingUser = await prisma.auth.findUnique({
       where: { email },
@@ -92,9 +92,11 @@ async function signUp(request: Request, response: Response) {
 
 async function signIn(request: Request, response: Response) {
   try {
-    request.body.email = request.body.email.toLowerCase();
+    if (request.body.emai) {
+      request.body.email = request.body.email.toLowerCase();
+    }
 
-    const { email, password } = signInSchema.parse(request.body);
+    const { email, password } = signInBodySchema.parse(request.body);
 
     const user = await prisma.auth.findUnique({
       where: { email },
@@ -178,9 +180,11 @@ async function signIn(request: Request, response: Response) {
 
 async function forgotPassword(request: Request, response: Response) {
   try {
-    request.body.email = request.body.email.toLowerCase();
+    if (request.body.emai) {
+      request.body.email = request.body.email.toLowerCase();
+    }
 
-    const { email } = forgotPasswordSchema.parse(request.body);
+    const { email } = forgotPasswordBodySchema.parse(request.body);
 
     const user = await prisma.auth.findUnique({
       where: { email },
@@ -242,7 +246,7 @@ async function forgotPassword(request: Request, response: Response) {
 
 async function resendOtp(request: Request, response: Response) {
   try {
-    const { type } = resendOtpSchema.parse(request.body);
+    const { type } = resendOtpBodySchema.parse(request.body);
 
     const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -289,7 +293,7 @@ async function resendOtp(request: Request, response: Response) {
 
 async function verifyOtp(request: Request, response: Response) {
   try {
-    const { otp, type } = verifyOtpSchema.parse(request.body);
+    const { otp, type } = verifyOtpBodySchema.parse(request.body);
 
     const existingOtp = await prisma.otp.findUnique({
       where: {
@@ -340,7 +344,7 @@ async function verifyOtp(request: Request, response: Response) {
 
 async function updatePassword(request: Request, response: Response) {
   try {
-    const { password } = updatePasswordSchema.parse(request.body);
+    const { password } = updatePasswordBodySchema.parse(request.body);
 
     const hashedPassword = await argon.hash(password);
 

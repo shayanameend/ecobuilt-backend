@@ -22,18 +22,12 @@ interface VerifyRequestParams {
   isVerified?: boolean;
 }
 
-function verifyRequest(
-  {
-    allowedTypes,
-    allowedStatus,
-    allowedRoles,
-    isVerified,
-  }: Readonly<VerifyRequestParams> = {
-    allowedTypes: [],
-    allowedStatus: [],
-    allowedRoles: [],
-  },
-) {
+function verifyRequest({
+  allowedTypes,
+  allowedStatus,
+  allowedRoles,
+  isVerified,
+}: Readonly<VerifyRequestParams>) {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
       const bearerToken = request.headers.authorization;

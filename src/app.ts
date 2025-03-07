@@ -7,6 +7,7 @@ import morgan from "morgan";
 import { verifyRequest } from "~/middlewares/auth";
 import { expandResponse } from "~/middlewares/response";
 import { authRouter } from "~/routers/auth";
+import { profileRouter } from "./routers/profile";
 
 const app = express();
 
@@ -26,10 +27,15 @@ app.use(
 app.use(expandResponse);
 
 app.use("/auth", authRouter);
+app.use("/profile", profileRouter);
 
-app.get("/test", verifyRequest({ isVerified: true }), (_request, response) => {
-  response.success({}, { message: "Test route!" });
-});
+app.get(
+  "/test",
+  verifyRequest({ allowedTypes: ["ACCESS"], isVerified: true }),
+  (_request, response) => {
+    response.success({}, { message: "Test route!" });
+  },
+);
 
 app.all("*", (_request, response) => {
   response.notFound({}, { message: "Not Found!" });
