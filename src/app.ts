@@ -27,7 +27,7 @@ app.use(
 app.use(expandResponse);
 
 app.use("/auth", authRouter);
-app.use("/profile", profileRouter);
+app.use("/profiles", profileRouter);
 
 app.get(
   "/test",
