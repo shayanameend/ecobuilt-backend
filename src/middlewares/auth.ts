@@ -16,13 +16,16 @@ import { prisma } from "~/lib/prisma";
 import { verifyToken } from "~/utils/jwt";
 
 interface VerifyRequestParams {
-  types: TokenType[];
-  role?: Role | null;
-  isVerified?: boolean | null;
+  allowedTypes: TokenType[];
+  allowedRoles?: Role[];
+  isVerified?: boolean;
 }
 
 function verifyRequest(
-  { types, isVerified, role }: Readonly<VerifyRequestParams> = { types: [] },
+  { allowedTypes, isVerified, allowedRoles }: Readonly<VerifyRequestParams> = {
+    allowedTypes: [],
+    allowedRoles: [],
+  },
 ) {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
@@ -43,9 +46,10 @@ function verifyRequest(
         type: OtpType;
       };
 
-      console.log({ token, decodedUser });
-
-      if (types.length > 0 && !types.includes(decodedUser.type as TokenType)) {
+      if (
+        allowedTypes.length > 0 &&
+        !allowedTypes.includes(decodedUser.type as TokenType)
+      ) {
         throw new ForbiddenResponse("Forbidden!");
       }
 
@@ -82,7 +86,11 @@ function verifyRequest(
         throw new BadResponse("User Not Verified!");
       }
 
-      if (role && user?.profile?.role !== role) {
+      if (
+        allowedRoles &&
+        allowedRoles.length > 0 &&
+        !allowedRoles.includes(user?.profile?.role as Role)
+      ) {
         throw new ForbiddenResponse("Forbidden!");
       }
 

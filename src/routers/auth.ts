@@ -22,7 +22,7 @@ authRouter.post("/forgot-password", forgotPassword);
 authRouter.post(
   "/resend-otp",
   verifyRequest({
-    types: ["VERIFY", "RESET"],
+    allowedTypes: ["VERIFY", "RESET"],
   }),
   resendOtp,
 );
@@ -30,7 +30,7 @@ authRouter.post(
 authRouter.post(
   "/verify-otp",
   verifyRequest({
-    types: ["VERIFY", "RESET"],
+    allowedTypes: ["VERIFY", "RESET"],
   }),
   verifyOtp,
 );
@@ -38,7 +38,7 @@ authRouter.post(
 authRouter.post(
   "/update-password",
   verifyRequest({
-    types: ["RESET", "ACCESS"],
+    allowedTypes: ["RESET", "ACCESS"],
   }),
   updatePassword,
 );
@@ -46,7 +46,7 @@ authRouter.post(
 authRouter.post(
   "/refresh",
   verifyRequest({
-    types: ["ACCESS"],
+    allowedTypes: ["ACCESS"],
     isVerified: true,
   }),
   refresh,
