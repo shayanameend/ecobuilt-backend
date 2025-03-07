@@ -1,6 +1,8 @@
 import type { OtpType, Role } from "@prisma/client";
 import type { NextFunction, Request, Response } from "express";
 
+import type { TokenType } from "~/../types";
+
 import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
 import {
@@ -14,16 +16,14 @@ import { prisma } from "~/lib/prisma";
 import { verifyToken } from "~/utils/jwt";
 
 interface VerifyRequestParams {
-  type?: OtpType | null;
+  types: TokenType[];
   role?: Role | null;
   isVerified?: boolean | null;
 }
 
-function verifyRequest({
-  type,
-  isVerified,
-  role,
-}: Readonly<VerifyRequestParams> = {}) {
+function verifyRequest(
+  { types, isVerified, role }: Readonly<VerifyRequestParams> = { types: [] },
+) {
   return async (request: Request, response: Response, next: NextFunction) => {
     try {
       const bearerToken = request.headers.authorization;
@@ -43,7 +43,9 @@ function verifyRequest({
         type: OtpType;
       };
 
-      if (type && decodedUser.type !== type) {
+      console.log({ token, decodedUser });
+
+      if (types.length > 0 && !types.includes(decodedUser.type as TokenType)) {
         throw new ForbiddenResponse("Forbidden!");
       }
 
@@ -57,8 +59,6 @@ function verifyRequest({
           password: true,
           isVerified: true,
           isDeleted: true,
-          createdAt: true,
-          updatedAt: true,
           profile: {
             select: {
               id: true,
@@ -69,6 +69,8 @@ function verifyRequest({
               updatedAt: true,
             },
           },
+          createdAt: true,
+          updatedAt: true,
         },
       });
 

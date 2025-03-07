@@ -1,4 +1,4 @@
-import type { OtpType } from "@prisma/client";
+import type { TokenType } from "~/../types";
 
 import jwt from "jsonwebtoken";
 
@@ -6,7 +6,7 @@ import { env } from "~/lib/env";
 
 async function signToken(payload: {
   email: string;
-  type: OtpType;
+  type: TokenType;
 }) {
   // @ts-ignore
   return jwt.sign(payload, env.JWT_SECRET, {

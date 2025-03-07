@@ -1,6 +1,5 @@
 import type { Request, Response } from "express";
 
-import { OtpType } from "@prisma/client";
 import { default as argon } from "argon2";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
@@ -55,11 +54,11 @@ async function signUp(request: Request, response: Response) {
       },
       update: {
         code,
-        type: OtpType.VERIFY_EMAIL,
+        type: "VERIFY",
       },
       create: {
         code,
-        type: OtpType.VERIFY_EMAIL,
+        type: "VERIFY",
         user: {
           connect: {
             id: user.id,
@@ -75,7 +74,7 @@ async function signUp(request: Request, response: Response) {
 
     const token = await signToken({
       email: user.email,
-      type: OtpType.VERIFY_EMAIL,
+      type: "VERIFY",
     });
 
     return response.created(
@@ -111,11 +110,6 @@ async function signIn(request: Request, response: Response) {
       throw new BadResponse("Invalid Password!");
     }
 
-    const token = await signToken({
-      email: user.email,
-      type: OtpType.VERIFY_EMAIL,
-    });
-
     if (!user.isVerified) {
       const sampleSpace = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -131,11 +125,11 @@ async function signIn(request: Request, response: Response) {
         },
         update: {
           code,
-          type: OtpType.VERIFY_EMAIL,
+          type: "VERIFY",
         },
         create: {
           code,
-          type: OtpType.VERIFY_EMAIL,
+          type: "VERIFY",
           user: {
             connect: {
               id: user.id,
@@ -149,6 +143,11 @@ async function signIn(request: Request, response: Response) {
         code: otp.code,
       });
 
+      const token = await signToken({
+        email: user.email,
+        type: "VERIFY",
+      });
+
       return response.success(
         {
           data: { token },
@@ -158,6 +157,11 @@ async function signIn(request: Request, response: Response) {
         },
       );
     }
+
+    const token = await signToken({
+      email: user.email,
+      type: "ACCESS",
+    });
 
     return response.success(
       {
@@ -200,11 +204,11 @@ async function forgotPassword(request: Request, response: Response) {
       },
       update: {
         code,
-        type: OtpType.RESET_PASSWORD,
+        type: "RESET",
       },
       create: {
         code,
-        type: OtpType.RESET_PASSWORD,
+        type: "RESET",
         user: {
           connect: {
             id: user.id,
@@ -220,7 +224,7 @@ async function forgotPassword(request: Request, response: Response) {
 
     const token = await signToken({
       email: user.email,
-      type: OtpType.RESET_PASSWORD,
+      type: "RESET",
     });
 
     return response.success(
@@ -302,7 +306,7 @@ async function verifyOtp(request: Request, response: Response) {
       throw new BadResponse("Invalid OTP!");
     }
 
-    if (type === OtpType.VERIFY_EMAIL) {
+    if (type === "VERIFY") {
       await prisma.user.update({
         where: { id: request.user.id },
         data: { isVerified: true },
@@ -318,7 +322,7 @@ async function verifyOtp(request: Request, response: Response) {
 
     const token = await signToken({
       email: request.user.email,
-      type: OtpType.VERIFY_EMAIL,
+      type: "ACCESS",
     });
 
     return response.success(
@@ -362,7 +366,7 @@ async function refresh(request: Request, response: Response) {
   try {
     const token = await signToken({
       email: request.user.email,
-      type: OtpType.VERIFY_EMAIL,
+      type: "ACCESS",
     });
 
     return response.success(

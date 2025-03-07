@@ -53,10 +53,10 @@ const forgotPasswordSchema = zod.object({
 
 const resendOtpSchema = zod.object({
   type: zod
-    .enum([OtpType.VERIFY_EMAIL, OtpType.RESET_PASSWORD], {
+    .enum([OtpType.VERIFY, OtpType.RESET], {
       message: "Invalid Type",
     })
-    .default(OtpType.VERIFY_EMAIL),
+    .default(OtpType.VERIFY),
 });
 
 const verifyOtpSchema = zod.object({
@@ -68,10 +68,10 @@ const verifyOtpSchema = zod.object({
       message: "OTP must be 6 characters long",
     }),
   type: zod
-    .enum([OtpType.VERIFY_EMAIL, OtpType.RESET_PASSWORD], {
+    .enum([OtpType.VERIFY, OtpType.RESET], {
       message: "Invalid Type",
     })
-    .default(OtpType.VERIFY_EMAIL),
+    .default(OtpType.VERIFY),
 });
 
 const updatePasswordSchema = zod.object({

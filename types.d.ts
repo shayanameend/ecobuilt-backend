@@ -1,5 +1,7 @@
 import type { OtpType, Role } from "@prisma/client";
 
+export type TokenType = OtpType | "ACCESS";
+
 export type JSON =
   | number
   | string
