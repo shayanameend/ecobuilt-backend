@@ -46,10 +46,7 @@ function verifyRequest(
         type: OtpType;
       };
 
-      if (
-        allowedTypes.length > 0 &&
-        !allowedTypes.includes(decodedUser.type as TokenType)
-      ) {
+      if (allowedTypes.length > 0 && !allowedTypes.includes(decodedUser.type)) {
         throw new ForbiddenResponse("Forbidden!");
       }
 
@@ -60,19 +57,9 @@ function verifyRequest(
         select: {
           id: true,
           email: true,
-          password: true,
+          role: true,
           isVerified: true,
           isDeleted: true,
-          profile: {
-            select: {
-              id: true,
-              name: true,
-              phone: true,
-              role: true,
-              createdAt: true,
-              updatedAt: true,
-            },
-          },
           createdAt: true,
           updatedAt: true,
         },
@@ -89,7 +76,7 @@ function verifyRequest(
       if (
         allowedRoles &&
         allowedRoles.length > 0 &&
-        !allowedRoles.includes(user?.profile?.role as Role)
+        !allowedRoles.includes(user.role)
       ) {
         throw new ForbiddenResponse("Forbidden!");
       }
