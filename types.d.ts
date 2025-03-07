@@ -1,4 +1,4 @@
-import type { OtpType, Role } from "@prisma/client";
+import type { OtpType, Role, UserStatus } from "@prisma/client";
 
 export type TokenType = OtpType | "ACCESS";
 
@@ -27,6 +27,7 @@ declare global {
       user: {
         id: string;
         email: string;
+        status: UserStatus;
         role: Role;
         isVerified: boolean;
         isDeleted: boolean;

@@ -1,4 +1,4 @@
-import type { OtpType, Role } from "@prisma/client";
+import type { OtpType, Role, UserStatus } from "@prisma/client";
 import type { NextFunction, Request, Response } from "express";
 
 import type { TokenType } from "~/../types";
@@ -17,13 +17,20 @@ import { verifyToken } from "~/utils/jwt";
 
 interface VerifyRequestParams {
   allowedTypes: TokenType[];
+  allowedStatus?: UserStatus[];
   allowedRoles?: Role[];
   isVerified?: boolean;
 }
 
 function verifyRequest(
-  { allowedTypes, isVerified, allowedRoles }: Readonly<VerifyRequestParams> = {
+  {
+    allowedTypes,
+    allowedStatus,
+    allowedRoles,
+    isVerified,
+  }: Readonly<VerifyRequestParams> = {
     allowedTypes: [],
+    allowedStatus: [],
     allowedRoles: [],
   },
 ) {
@@ -57,6 +64,7 @@ function verifyRequest(
         select: {
           id: true,
           email: true,
+          status: true,
           role: true,
           isVerified: true,
           isDeleted: true,
@@ -71,6 +79,14 @@ function verifyRequest(
 
       if (isVerified && !user?.isVerified) {
         throw new BadResponse("User Not Verified!");
+      }
+
+      if (
+        allowedStatus &&
+        allowedStatus.length > 0 &&
+        !allowedStatus.includes(user.status)
+      ) {
+        throw new ForbiddenResponse("Forbidden!");
       }
 
       if (

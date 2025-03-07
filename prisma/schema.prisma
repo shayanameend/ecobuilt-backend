@@ -15,14 +15,21 @@ enum Role {
   USER
 }
 
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  email      String  @unique
+  email      String     @unique
   password   String
-  role       Role    @default(UNSPECIFIED)
-  isVerified Boolean @default(false) @map("is_verified")
-  isDeleted  Boolean @default(false) @map("is_deleted")
+  status     UserStatus @default(PENDING)
+  role       Role       @default(UNSPECIFIED)
+  isVerified Boolean    @default(false) @map("is_verified")
+  isDeleted  Boolean    @default(false) @map("is_deleted")
 
   otpId String? @map("otp_id") @db.ObjectId
   otp   Otp?
