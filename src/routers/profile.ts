@@ -1,12 +1,12 @@
 import { Router } from "express";
 
 import {
-  getProfile,
   createProfile,
+  getProfile,
   updateProfile,
 } from "~/controllers/profile";
 import { verifyRequest } from "~/middlewares/auth";
-import upload from "~/middlewares/upload";
+import { uploadOne } from "~/middlewares/upload";
 
 const profileRouter = Router();
 
@@ -25,7 +25,7 @@ profileRouter.post(
     allowedTypes: ["ACCESS"],
     isVerified: true,
   }),
-  upload.one("picture"),
+  uploadOne("picture"),
   createProfile,
 );
 
@@ -35,6 +35,7 @@ profileRouter.put(
     allowedTypes: ["ACCESS"],
     isVerified: true,
   }),
+  uploadOne("picture"),
   updateProfile,
 );
 
