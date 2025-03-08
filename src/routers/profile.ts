@@ -6,6 +6,7 @@ import {
   updateProfile,
 } from "~/controllers/profile";
 import { verifyRequest } from "~/middlewares/auth";
+import upload from "~/middlewares/upload";
 
 const profileRouter = Router();
 
@@ -24,6 +25,7 @@ profileRouter.post(
     allowedTypes: ["ACCESS"],
     isVerified: true,
   }),
+  upload.one("picture"),
   createProfile,
 );
 
