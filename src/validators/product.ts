@@ -48,21 +48,21 @@ const createProductBodySchema = zod.object({
     .int({
       message: "Stock must be an integer!",
     })
-    .positive({
-      message: "Stock must be a positive number!",
+    .min(0, {
+      message: "Stock must be a non-negative number!",
     }),
   price: zod.coerce
     .number({
       message: "Price must be a number!",
     })
-    .positive({
+    .min(1, {
       message: "Price must be a positive number!",
     }),
   salePrice: zod.coerce
     .number({
       message: "Sale price must be a number!",
     })
-    .positive({
+    .min(1, {
       message: "Sale price must be a positive number!",
     })
     .optional(),
@@ -133,15 +133,15 @@ const updateProductBodySchema = zod.object({
     .int({
       message: "Stock must be an integer!",
     })
-    .positive({
-      message: "Stock must be a positive number!",
+    .min(0, {
+      message: "Stock must be a non-negative number!",
     })
     .optional(),
   price: zod.coerce
     .number({
       message: "Price must be a number!",
     })
-    .positive({
+    .min(1, {
       message: "Price must be a positive number!",
     })
     .optional(),
@@ -149,7 +149,7 @@ const updateProductBodySchema = zod.object({
     .number({
       message: "Sale price must be a number!",
     })
-    .positive({
+    .min(1, {
       message: "Sale price must be a positive number!",
     })
     .optional(),
