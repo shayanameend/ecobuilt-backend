@@ -40,7 +40,9 @@ async function getProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile fetched successfully!",
@@ -72,7 +74,9 @@ async function getProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile fetched successfully!",
@@ -103,7 +107,9 @@ async function getProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile fetched successfully!",
@@ -174,7 +180,9 @@ async function createProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile created successfully!",
@@ -216,7 +224,9 @@ async function createProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile created successfully!",
@@ -256,7 +266,9 @@ async function createProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile created successfully!",
@@ -313,7 +325,9 @@ async function updateProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile updated successfully!",
@@ -353,7 +367,9 @@ async function updateProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile updated successfully!",
@@ -391,7 +407,9 @@ async function updateProfile(request: Request, response: Response) {
 
         return response.success(
           {
-            profile,
+            data: {
+              profile,
+            },
           },
           {
             message: "Profile updated successfully!",
