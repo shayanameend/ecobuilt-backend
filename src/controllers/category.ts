@@ -74,7 +74,7 @@ async function updateCategory(request: Request, response: Response) {
     const { id } = updateCategoryParamsSchema.parse(request.params);
     const validatedData = updateCategoryBodySchema.parse(request.body);
 
-    const updatedCategory = await prisma.category.update({
+    const category = await prisma.category.update({
       where: { id },
       data: validatedData,
       select: {
@@ -87,13 +87,13 @@ async function updateCategory(request: Request, response: Response) {
       },
     });
 
-    if (!updatedCategory) {
+    if (!category) {
       throw new NotFoundResponse("Category not found!");
     }
 
     return response.success(
       {
-        data: { category: updatedCategory },
+        data: { category },
       },
       {
         message: "Category updated successfully!",
@@ -104,38 +104,4 @@ async function updateCategory(request: Request, response: Response) {
   }
 }
 
-async function deleteCategory(request: Request, response: Response) {
-  try {
-    const { id } = updateCategoryParamsSchema.parse(request.params);
-
-    const deletedCategory = await prisma.category.update({
-      where: { id },
-      data: { isDeleted: true },
-      select: {
-        id: true,
-        name: true,
-        status: true,
-        isDeleted: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    if (!deletedCategory) {
-      throw new NotFoundResponse("Category not found!");
-    }
-
-    return response.success(
-      {
-        data: { category: deletedCategory },
-      },
-      {
-        message: "Category deleted successfully!",
-      },
-    );
-  } catch (error) {
-    handleErrors({ response, error });
-  }
-}
-
-export { getCategories, createCategory, deleteCategory, updateCategory };
+export { getCategories, createCategory, updateCategory };

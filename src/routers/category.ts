@@ -2,7 +2,6 @@ import { Router } from "express";
 
 import {
   createCategory,
-  deleteCategory,
   getCategories,
   updateCategory,
 } from "~/controllers/category";
@@ -39,17 +38,6 @@ categoryRouter.put(
     isVerified: true,
   }),
   updateCategory,
-);
-
-categoryRouter.delete(
-  "/:id",
-  verifyRequest({
-    allowedTypes: ["ACCESS"],
-    allowedStatus: ["APPROVED"],
-    allowedRoles: ["ADMIN"],
-    isVerified: true,
-  }),
-  deleteCategory,
 );
 
 export { categoryRouter };

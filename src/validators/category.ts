@@ -43,24 +43,29 @@ const updateCategoryBodySchema = zod.object({
     })
     .max(255, {
       message: "Name must be at most 255 characters long!",
-    }),
-  status: zod.enum(
-    [CategoryStatus.PENDING, CategoryStatus.APPROVED, CategoryStatus.REJECTED],
-    {
-      message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
-    },
-  ),
-});
-
-const deleteCategoryParamsSchema = zod.object({
-  id: zod.string({
-    message: "ID must be a string!",
-  }),
+    })
+    .optional(),
+  status: zod
+    .enum(
+      [
+        CategoryStatus.PENDING,
+        CategoryStatus.APPROVED,
+        CategoryStatus.REJECTED,
+      ],
+      {
+        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
+      },
+    )
+    .optional(),
+  isDeleted: zod
+    .boolean({
+      message: "isDeleted must be a boolean!",
+    })
+    .optional(),
 });
 
 export {
   createCategoryBodySchema,
   updateCategoryParamsSchema,
   updateCategoryBodySchema,
-  deleteCategoryParamsSchema,
 };
