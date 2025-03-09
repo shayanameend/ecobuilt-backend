@@ -131,6 +131,10 @@ async function createProfile(request: Request, response: Response) {
       },
     });
 
+    if (request.user.role !== "UNSPECIFIED") {
+      throw new BadResponse("Profile already exists!");
+    }
+
     switch (role) {
       case "SUPER_ADMIN":
       case "ADMIN": {
@@ -265,6 +269,10 @@ async function createProfile(request: Request, response: Response) {
 async function updateProfile(request: Request, response: Response) {
   try {
     const role = request.user.role;
+
+    if (role === "UNSPECIFIED") {
+      throw new BadResponse("Profile does not exist!");
+    }
 
     switch (role) {
       case "SUPER_ADMIN":
