@@ -137,7 +137,7 @@ async function createProfile(request: Request, response: Response) {
       throw new BadResponse("Profile picture is required!");
     }
 
-    const pictureId = await addFile({
+    const pictureId = addFile({
       file: request.file,
     });
 
@@ -324,7 +324,7 @@ async function updateProfile(request: Request, response: Response) {
     }
 
     if (request.file) {
-      pictureId = await addFile({
+      pictureId = addFile({
         file: request.file,
       });
     }

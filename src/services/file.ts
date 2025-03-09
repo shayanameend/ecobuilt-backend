@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 import { env } from "~/lib/env";
 import { s3Client } from "~/lib/s3";
 
-async function addFile({ file }: { file: Express.Multer.File }) {
+function addFile({ file }: { file: Express.Multer.File }) {
   const key = `${uuid()}${path.extname(file.originalname)}`;
 
   const putCommand = new PutObjectCommand({
@@ -16,18 +16,18 @@ async function addFile({ file }: { file: Express.Multer.File }) {
     ContentType: file.mimetype,
   });
 
-  await s3Client.send(putCommand);
+  s3Client.send(putCommand);
 
   return key;
 }
 
-async function removeFile({ key }: { key: string }) {
+function removeFile({ key }: { key: string }) {
   const deleteCommand = new DeleteObjectCommand({
     Bucket: env.AWS_BUCKET,
     Key: key,
   });
 
-  await s3Client.send(deleteCommand);
+  s3Client.send(deleteCommand);
 
   return key;
 }
