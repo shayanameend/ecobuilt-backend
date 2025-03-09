@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { addFile } from "~/services/file";
 import {
   createAdminProfileBodySchema,
   createProfileBodySchema,
@@ -135,14 +136,20 @@ async function createProfile(request: Request, response: Response) {
       throw new BadResponse("Profile already exists!");
     }
 
+    if (!request.file) {
+      throw new BadResponse("Profile picture is required!");
+    }
+
+    const pictureId = await addFile({
+      file: request.file,
+    });
+
     switch (role) {
       case "SUPER_ADMIN":
       case "ADMIN": {
         const { name, phone } = createAdminProfileBodySchema.parse(
           request.body,
         );
-
-        const pictureId = "";
 
         const profile = await prisma.admin.create({
           data: {
@@ -177,8 +184,6 @@ async function createProfile(request: Request, response: Response) {
       case "VENDOR": {
         const { name, description, phone, postalCode, city, pickupAddress } =
           createVendorProfileBodySchema.parse(request.body);
-
-        const pictureId = "";
 
         const profile = await prisma.vendor.create({
           data: {
@@ -221,8 +226,6 @@ async function createProfile(request: Request, response: Response) {
       case "USER": {
         const { name, phone, postalCode, city, deliveryAddress } =
           createUserProfileBodySchema.parse(request.body);
-
-        const pictureId = "";
 
         const profile = await prisma.user.create({
           data: {
@@ -274,6 +277,14 @@ async function updateProfile(request: Request, response: Response) {
       throw new BadResponse("Profile does not exist!");
     }
 
+    if (!request.file) {
+      throw new BadResponse("Profile picture is required!");
+    }
+
+    const pictureId = await addFile({
+      file: request.file,
+    });
+
     switch (role) {
       case "SUPER_ADMIN":
       case "ADMIN": {
@@ -286,6 +297,7 @@ async function updateProfile(request: Request, response: Response) {
             authId: request.user.id,
           },
           data: {
+            pictureId,
             name,
             phone,
           },
@@ -317,6 +329,7 @@ async function updateProfile(request: Request, response: Response) {
             authId: request.user.id,
           },
           data: {
+            pictureId,
             name,
             description,
             phone,
@@ -356,6 +369,7 @@ async function updateProfile(request: Request, response: Response) {
             authId: request.user.id,
           },
           data: {
+            pictureId,
             name,
             phone,
             postalCode,
