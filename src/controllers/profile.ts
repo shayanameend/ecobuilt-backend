@@ -2,7 +2,7 @@ import type { Request, Response } from "express";
 
 import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import { addFile } from "~/services/file";
+import { addFile, removeFile } from "~/services/file";
 import {
   createAdminProfileBodySchema,
   createProfileBodySchema,
@@ -289,13 +289,27 @@ async function updateProfile(request: Request, response: Response) {
       throw new BadResponse("Profile does not exist!");
     }
 
-    if (!request.file) {
+    if (request.body.pictureId && !request.file) {
       throw new BadResponse("Profile picture is required!");
     }
 
-    const pictureId = await addFile({
-      file: request.file,
-    });
+    if (request.file && !request.body.pictureId) {
+      throw new BadResponse("Picture ID is required!");
+    }
+
+    let pictureId = request.body.pictureId;
+
+    if (pictureId) {
+      removeFile({
+        key: pictureId,
+      });
+    }
+
+    if (request.file) {
+      pictureId = await addFile({
+        file: request.file,
+      });
+    }
 
     switch (role) {
       case "SUPER_ADMIN":
