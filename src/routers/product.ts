@@ -7,6 +7,7 @@ import {
   updateProduct,
 } from "~/controllers/product";
 import { verifyRequest } from "~/middlewares/auth";
+import { uploadMultiple } from "~/middlewares/upload";
 
 const productRouter = Router();
 
@@ -36,6 +37,7 @@ productRouter.post(
     allowedRoles: ["VENDOR"],
     isVerified: true,
   }),
+  uploadMultiple("pictures"),
   createProduct,
 );
 
@@ -47,6 +49,7 @@ productRouter.put(
     allowedRoles: ["ADMIN", "VENDOR"],
     isVerified: true,
   }),
+  uploadMultiple("pictures"),
   updateProduct,
 );
 
