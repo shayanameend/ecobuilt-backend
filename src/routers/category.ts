@@ -9,14 +9,7 @@ import { verifyRequest } from "~/middlewares/auth";
 
 const categoryRouter = Router();
 
-categoryRouter.get(
-  "/",
-  verifyRequest({
-    allowedTypes: ["ACCESS"],
-    isVerified: true,
-  }),
-  getCategories,
-);
+categoryRouter.get("/", getCategories);
 
 categoryRouter.post(
   "/",
