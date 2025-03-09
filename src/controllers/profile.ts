@@ -278,6 +278,7 @@ async function createProfile(request: Request, response: Response) {
             id: request.user.id,
           },
           data: {
+            status: "APPROVED",
             role,
           },
         });
