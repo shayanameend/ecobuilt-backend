@@ -154,9 +154,10 @@ const updateProductBodySchema = zod.object({
     })
     .optional(),
   isDeleted: zod
-    .boolean({
-      message: "isDeleted must be a boolean!",
-    })
+    .preprocess(
+      (val) => (val === "true" ? true : val === "false" ? false : val),
+      zod.boolean(),
+    )
     .optional(),
   categoryId: zod
     .string({

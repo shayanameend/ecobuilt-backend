@@ -2,15 +2,39 @@ import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import {
   createCategoryBodySchema,
+  getCategoriesQuerySchema,
   updateCategoryBodySchema,
   updateCategoryParamsSchema,
 } from "~/validators/category";
 
 async function getCategories(request: Request, response: Response) {
   try {
+    const { name, status, isDeleted } = getCategoriesQuerySchema.parse(
+      request.query,
+    );
+
+    const where: Prisma.CategoryWhereInput = {};
+
+    if (name) {
+      where.name = {
+        contains: name,
+        mode: "insensitive",
+      };
+    }
+
+    if (status !== undefined) {
+      where.status = status;
+    }
+
+    if (isDeleted !== undefined) {
+      where.isDeleted = isDeleted;
+    }
+
     const categories = await prisma.category.findMany({
+      where,
       select: {
         id: true,
         name: true,

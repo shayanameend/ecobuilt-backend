@@ -13,7 +13,10 @@ const envSchema = zod.object({
   JWT_EXPIRY: zod.string(),
   NODEMAILER_HOST: zod.string(),
   NODEMAILER_PORT: zod.coerce.number(),
-  NODEMAILER_SECURE: zod.coerce.boolean(),
+  NODEMAILER_SECURE: zod.preprocess(
+    (val) => (val === "true" ? true : val === "false" ? false : val),
+    zod.boolean(),
+  ),
   NODEMAILER_EMAIL: zod.string().email(),
   NODEMAILER_PASSWORD: zod.string(),
   CLIENT_BASE_URL: zod.string().url(),

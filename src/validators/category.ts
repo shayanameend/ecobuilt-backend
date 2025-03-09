@@ -2,6 +2,35 @@ import { CategoryStatus } from "@prisma/client";
 
 import * as zod from "zod";
 
+const getCategoriesQuerySchema = zod.object({
+  name: zod
+    .string({
+      message: "Name must be a string!",
+    })
+    .min(1, {
+      message: "Name must be at least 1 characters long!",
+    })
+    .optional(),
+  status: zod
+    .enum(
+      [
+        CategoryStatus.PENDING,
+        CategoryStatus.APPROVED,
+        CategoryStatus.REJECTED,
+      ],
+      {
+        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
+      },
+    )
+    .optional(),
+  isDeleted: zod
+    .preprocess(
+      (val) => (val === "true" ? true : val === "false" ? false : val),
+      zod.boolean(),
+    )
+    .optional(),
+});
+
 const createCategoryBodySchema = zod.object({
   name: zod
     .string({
@@ -58,13 +87,15 @@ const updateCategoryBodySchema = zod.object({
     )
     .optional(),
   isDeleted: zod
-    .boolean({
-      message: "isDeleted must be a boolean!",
-    })
+    .preprocess(
+      (val) => (val === "true" ? true : val === "false" ? false : val),
+      zod.boolean(),
+    )
     .optional(),
 });
 
 export {
+  getCategoriesQuerySchema,
   createCategoryBodySchema,
   updateCategoryParamsSchema,
   updateCategoryBodySchema,
