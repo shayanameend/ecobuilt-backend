@@ -300,7 +300,7 @@ async function updateProfile(request: Request, response: Response) {
     let pictureId = request.body.pictureId;
 
     if (pictureId) {
-      removeFile({
+      await removeFile({
         key: pictureId,
       });
     }

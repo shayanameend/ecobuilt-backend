@@ -120,7 +120,7 @@ const createUserProfileBodySchema = zod.object({
 const updateAdminProfileBodySchema = zod.object({
   pictureId: zod
     .string()
-    .length(36, {
+    .length(40, {
       message: "Picture ID is invalid!",
     })
     .optional(),
@@ -148,7 +148,7 @@ const updateAdminProfileBodySchema = zod.object({
 const updateVendorProfileBodySchema = zod.object({
   pictureId: zod
     .string()
-    .length(36, {
+    .length(40, {
       message: "Picture ID is invalid!",
     })
     .optional(),
@@ -208,7 +208,7 @@ const updateVendorProfileBodySchema = zod.object({
 const updateUserProfileBodySchema = zod.object({
   pictureId: zod
     .string()
-    .length(36, {
+    .length(40, {
       message: "Picture ID is invalid!",
     })
     .optional(),
