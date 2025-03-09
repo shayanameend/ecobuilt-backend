@@ -13,12 +13,18 @@ const createCategoryBodySchema = zod.object({
     .max(255, {
       message: "Name must be at most 255 characters long!",
     }),
-  status: zod.enum(
-    [CategoryStatus.PENDING, CategoryStatus.APPROVED, CategoryStatus.REJECTED],
-    {
-      message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
-    },
-  ),
+  status: zod
+    .enum(
+      [
+        CategoryStatus.PENDING,
+        CategoryStatus.APPROVED,
+        CategoryStatus.REJECTED,
+      ],
+      {
+        message: "Status must be one of 'PENDING', 'APPROVED', or 'REJECTED'!",
+      },
+    )
+    .default(CategoryStatus.PENDING),
 });
 
 const updateCategoryParamsSchema = zod.object({
