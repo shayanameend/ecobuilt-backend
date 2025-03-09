@@ -11,23 +11,9 @@ import { uploadMultiple } from "~/middlewares/upload";
 
 const productRouter = Router();
 
-productRouter.get(
-  "/",
-  verifyRequest({
-    allowedTypes: ["ACCESS"],
-    isVerified: true,
-  }),
-  getProducts,
-);
+productRouter.get("/", getProducts);
 
-productRouter.get(
-  "/:id",
-  verifyRequest({
-    allowedTypes: ["ACCESS"],
-    isVerified: true,
-  }),
-  getProduct,
-);
+productRouter.get("/:id", getProduct);
 
 productRouter.post(
   "/",
