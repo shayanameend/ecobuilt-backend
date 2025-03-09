@@ -7,7 +7,8 @@ import morgan from "morgan";
 import { verifyRequest } from "~/middlewares/auth";
 import { expandResponse } from "~/middlewares/response";
 import { authRouter } from "~/routers/auth";
-import { profileRouter } from "./routers/profile";
+import { categoryRouter } from "~/routers/category";
+import { profileRouter } from "~/routers/profile";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use(expandResponse);
 
 app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
+app.use("/category", categoryRouter);
 
 app.get(
   "/test",
