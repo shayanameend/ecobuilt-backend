@@ -4,116 +4,146 @@ import * as zod from "zod";
 
 const createProfileBodySchema = zod.object({
   role: zod.enum([Role.SUPER_ADMIN, Role.ADMIN, Role.VENDOR, Role.USER], {
-    message: "Invalid Role!",
+    message: "Role must be a valid role!",
   }),
 });
 
 const createAdminProfileBodySchema = zod.object({
   name: zod
     .string({
-      message: "Name is required!",
+      message: "Name must be a string!",
     })
     .min(3, {
-      message: "Name is too short!",
+      message: "Name must be at least 3 characters!",
     })
-    .max(32, {
-      message: "Name is too long!",
+    .max(255, {
+      message: "Name must be at most 255 characters!",
     }),
   phone: zod
     .string({
-      message: "Phone is required!",
+      message: "Phone must be a string!",
     })
-    .min(10, {
-      message: "Phone is too short!",
+    .min(3, {
+      message: "Phone must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Phone must be at most 255 characters!",
     }),
 });
 
 const createVendorProfileBodySchema = zod.object({
   name: zod
     .string({
-      message: "Name is required!",
+      message: "Name must be a string!",
     })
     .min(3, {
-      message: "Name is too short!",
+      message: "Name must be at least 3 characters!",
     })
-    .max(32, {
-      message: "Name is too long!",
+    .max(255, {
+      message: "Name must be at most 255 characters!",
     }),
   description: zod
     .string({
-      message: "Description is required!",
+      message: "Description must be a string!",
     })
-    .min(10, {
-      message: "Description is too short!",
+    .min(3, {
+      message: "Description must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Description must be at most 255 characters!",
     }),
   phone: zod
     .string({
-      message: "Phone is required!",
+      message: "Phone must be a string!",
     })
-    .min(10, {
-      message: "Phone is too short!",
+    .min(3, {
+      message: "Phone must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Phone must be at most 255 characters!",
     }),
   postalCode: zod
     .string({
-      message: "Postal Code is required!",
+      message: "Postal Code must be a string!",
     })
-    .length(6, {
-      message: "Postal Code is invalid!",
+    .min(3, {
+      message: "Postal Code must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Postal Code must be at most 255 characters!",
     }),
   city: zod
     .string({
-      message: "City is required!",
+      message: "City must be a string!",
     })
     .min(3, {
-      message: "City is too short!",
+      message: "City must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "City must be at most 255 characters!",
     }),
   pickupAddress: zod
     .string({
-      message: "Pickup Address is required!",
+      message: "Pickup Address must be a string!",
     })
-    .min(10, {
-      message: "Pickup Address is too short!",
+    .min(3, {
+      message: "Pickup Address must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Pickup Address must be at most 255 characters!",
     }),
 });
 
 const createUserProfileBodySchema = zod.object({
   name: zod
     .string({
-      message: "Name is required!",
+      message: "Name must be a string!",
     })
     .min(3, {
-      message: "Name is too short!",
+      message: "Name must be at least 3 characters!",
     })
-    .max(32, {
-      message: "Name is too long!",
+    .max(255, {
+      message: "Name must be at most 255 characters!",
     }),
   phone: zod
     .string({
-      message: "Phone is required!",
+      message: "Phone must be a string!",
     })
-    .min(10, {
-      message: "Phone is too short!",
+    .min(3, {
+      message: "Phone must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Phone must be at most 255 characters!",
     }),
   postalCode: zod
     .string({
-      message: "Postal Code is required!",
+      message: "Postal Code must be a string!",
     })
-    .length(6, {
-      message: "Postal Code is invalid!",
+    .min(3, {
+      message: "Postal Code must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Postal Code must be at most 255 characters!",
     }),
   city: zod
     .string({
-      message: "City is required!",
+      message: "City must be a string!",
     })
     .min(3, {
-      message: "City is too short!",
+      message: "City must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "City must be at most 255 characters!",
     }),
   deliveryAddress: zod
     .string({
-      message: "Delivery Address is required!",
+      message: "Delivery Address must be a string!",
     })
-    .min(10, {
-      message: "Delivery Address is too short!",
+    .min(3, {
+      message: "Delivery Address must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Delivery Address must be at most 255 characters!",
     }),
 });
 
@@ -126,21 +156,24 @@ const updateAdminProfileBodySchema = zod.object({
     .optional(),
   name: zod
     .string({
-      message: "Name is required!",
+      message: "Name must be a string!",
     })
     .min(3, {
-      message: "Name is too short!",
+      message: "Name must be at least 3 characters!",
     })
-    .max(32, {
-      message: "Name is too long!",
+    .max(255, {
+      message: "Name must be at most 255 characters!",
     })
     .optional(),
   phone: zod
     .string({
-      message: "Phone is required!",
+      message: "Phone must be a string!",
     })
-    .min(10, {
-      message: "Phone is too short!",
+    .min(3, {
+      message: "Phone must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Phone must be at most 255 characters!",
     })
     .optional(),
 });
@@ -154,53 +187,67 @@ const updateVendorProfileBodySchema = zod.object({
     .optional(),
   name: zod
     .string({
-      message: "Name is required!",
+      message: "Name must be a string!",
     })
     .min(3, {
-      message: "Name is too short!",
+      message: "Name must be at least 3 characters!",
     })
-    .max(32, {
-      message: "Name is too long!",
+    .max(255, {
+      message: "Name must be at most 255 characters!",
     })
     .optional(),
   description: zod
     .string({
-      message: "Description is required!",
+      message: "Description must be a string!",
     })
-    .min(10, {
-      message: "Description is too short!",
+    .min(3, {
+      message: "Description must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Description must be at most 255 characters!",
     })
     .optional(),
   phone: zod
     .string({
-      message: "Phone is required!",
+      message: "Phone must be a string!",
     })
-    .min(10, {
-      message: "Phone is too short!",
+    .min(3, {
+      message: "Phone must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Phone must be at most 255 characters!",
     })
     .optional(),
   postalCode: zod
     .string({
-      message: "Postal Code is required!",
+      message: "Postal Code must be a string!",
     })
-    .length(6, {
-      message: "Postal Code is invalid!",
+    .min(3, {
+      message: "Postal Code must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Postal Code must be at most 255 characters!",
     })
     .optional(),
   city: zod
     .string({
-      message: "City is required!",
+      message: "City must be a string!",
     })
     .min(3, {
-      message: "City is too short!",
+      message: "City must be at least 3 characters!",
     })
-    .optional(),
+    .max(255, {
+      message: "City must be at most 255 characters!",
+    }),
   pickupAddress: zod
     .string({
-      message: "Pickup Address is required!",
+      message: "Pickup Address must be a string!",
     })
-    .min(10, {
-      message: "Pickup Address is too short!",
+    .min(3, {
+      message: "Pickup Address must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Pickup Address must be at most 255 characters!",
     })
     .optional(),
 });
@@ -214,45 +261,57 @@ const updateUserProfileBodySchema = zod.object({
     .optional(),
   name: zod
     .string({
-      message: "Name is required!",
+      message: "Name must be a string!",
     })
     .min(3, {
-      message: "Name is too short!",
+      message: "Name must be at least 3 characters!",
     })
-    .max(32, {
-      message: "Name is too long!",
+    .max(255, {
+      message: "Name must be at most 255 characters!",
     })
     .optional(),
   phone: zod
     .string({
-      message: "Phone is required!",
+      message: "Phone must be a string!",
     })
-    .min(10, {
-      message: "Phone is too short!",
+    .min(3, {
+      message: "Phone must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Phone must be at most 255 characters!",
     })
     .optional(),
   postalCode: zod
     .string({
-      message: "Postal Code is required!",
+      message: "Postal Code must be a string!",
     })
-    .length(6, {
-      message: "Postal Code is invalid!",
+    .min(3, {
+      message: "Postal Code must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Postal Code must be at most 255 characters!",
     })
     .optional(),
   city: zod
     .string({
-      message: "City is required!",
+      message: "City must be a string!",
     })
     .min(3, {
-      message: "City is too short!",
+      message: "City must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "City must be at most 255 characters!",
     })
     .optional(),
   deliveryAddress: zod
     .string({
-      message: "Delivery Address is required!",
+      message: "Delivery Address must be a string!",
     })
-    .min(10, {
-      message: "Delivery Address is too short!",
+    .min(3, {
+      message: "Delivery Address must be at least 3 characters!",
+    })
+    .max(255, {
+      message: "Delivery Address must be at most 255 characters!",
     })
     .optional(),
 });
