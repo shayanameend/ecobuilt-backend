@@ -25,7 +25,7 @@ async function getProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             phone: true,
             createdAt: true,
@@ -53,7 +53,7 @@ async function getProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             description: true,
             phone: true,
@@ -85,7 +85,7 @@ async function getProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             phone: true,
             postalCode: true,
@@ -138,11 +138,11 @@ async function createProfile(request: Request, response: Response) {
           request.body,
         );
 
-        const pictureUrl = "";
+        const pictureId = "";
 
         const profile = await prisma.admin.create({
           data: {
-            pictureUrl,
+            pictureId,
             name,
             phone,
             auth: {
@@ -153,7 +153,7 @@ async function createProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             phone: true,
             createdAt: true,
@@ -174,11 +174,11 @@ async function createProfile(request: Request, response: Response) {
         const { name, description, phone, postalCode, city, pickupAddress } =
           createVendorProfileBodySchema.parse(request.body);
 
-        const pictureUrl = "";
+        const pictureId = "";
 
         const profile = await prisma.vendor.create({
           data: {
-            pictureUrl,
+            pictureId,
             name,
             description,
             phone,
@@ -193,7 +193,7 @@ async function createProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             description: true,
             phone: true,
@@ -218,11 +218,11 @@ async function createProfile(request: Request, response: Response) {
         const { name, phone, postalCode, city, deliveryAddress } =
           createUserProfileBodySchema.parse(request.body);
 
-        const pictureUrl = "";
+        const pictureId = "";
 
         const profile = await prisma.user.create({
           data: {
-            pictureUrl,
+            pictureId,
             name,
             phone,
             postalCode,
@@ -236,7 +236,7 @@ async function createProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             phone: true,
             postalCode: true,
@@ -283,7 +283,7 @@ async function updateProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             phone: true,
             createdAt: true,
@@ -318,7 +318,7 @@ async function updateProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             description: true,
             phone: true,
@@ -356,7 +356,7 @@ async function updateProfile(request: Request, response: Response) {
           },
           select: {
             id: true,
-            pictureUrl: true,
+            pictureId: true,
             name: true,
             phone: true,
             postalCode: true,
