@@ -82,7 +82,7 @@ async function createProduct(request: Request, response: Response) {
   try {
     const validatedData = createProductBodySchema.parse(request.body);
 
-    const pictureIds = [""];
+    const pictureIds: string[] = [];
 
     const product = await prisma.product.create({
       data: { ...validatedData, pictureIds },

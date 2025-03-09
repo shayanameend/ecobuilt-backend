@@ -32,7 +32,7 @@ productRouter.put(
   verifyRequest({
     allowedTypes: ["ACCESS"],
     allowedStatus: ["APPROVED"],
-    allowedRoles: ["ADMIN", "VENDOR"],
+    allowedRoles: ["SUPER_ADMIN", "ADMIN", "VENDOR"],
     isVerified: true,
   }),
   uploadMultiple("pictures"),

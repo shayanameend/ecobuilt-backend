@@ -16,7 +16,7 @@ categoryRouter.post(
   verifyRequest({
     allowedTypes: ["ACCESS"],
     allowedStatus: ["APPROVED"],
-    allowedRoles: ["ADMIN", "VENDOR"],
+    allowedRoles: ["SUPER_ADMIN", "ADMIN", "VENDOR"],
     isVerified: true,
   }),
   createCategory,
@@ -27,7 +27,7 @@ categoryRouter.put(
   verifyRequest({
     allowedTypes: ["ACCESS"],
     allowedStatus: ["APPROVED"],
-    allowedRoles: ["ADMIN"],
+    allowedRoles: ["SUPER_ADMIN", "ADMIN"],
     isVerified: true,
   }),
   updateCategory,
