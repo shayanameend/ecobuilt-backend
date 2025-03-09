@@ -62,14 +62,7 @@ async function getProduct(request: Request, response: Response) {
     });
 
     if (!product) {
-      return response.notFound(
-        {
-          data: { id },
-        },
-        {
-          message: "Product not found!",
-        },
-      );
+      throw new NotFoundResponse("Product not found!");
     }
 
     return response.success(
