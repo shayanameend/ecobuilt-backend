@@ -140,7 +140,7 @@ model Product {
   name        String
   description String
   sku         String
-  stock       Int      @default(1)
+  stock       Int
   price       Float
   salePrice   Float?   @map("sale_price")
   isDeleted   Boolean  @default(false) @map("is_deleted")
@@ -187,7 +187,7 @@ model OrderToProduct {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   price    Float
-  quantity Int   @default(1)
+  quantity Int
 
   orderId String @map("order_id") @db.ObjectId
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
