@@ -129,15 +129,6 @@ async function createProfile(request: Request, response: Response) {
   try {
     const { role } = createProfileBodySchema.parse(request.body);
 
-    await prisma.auth.update({
-      where: {
-        id: request.user.id,
-      },
-      data: {
-        role,
-      },
-    });
-
     if (request.user.role !== "UNSPECIFIED") {
       throw new BadResponse("Profile already exists!");
     }
@@ -175,6 +166,15 @@ async function createProfile(request: Request, response: Response) {
             phone: true,
             createdAt: true,
             updatedAt: true,
+          },
+        });
+
+        await prisma.auth.update({
+          where: {
+            id: request.user.id,
+          },
+          data: {
+            role,
           },
         });
 
@@ -222,6 +222,15 @@ async function createProfile(request: Request, response: Response) {
           },
         });
 
+        await prisma.auth.update({
+          where: {
+            id: request.user.id,
+          },
+          data: {
+            role,
+          },
+        });
+
         return response.success(
           {
             data: {
@@ -261,6 +270,15 @@ async function createProfile(request: Request, response: Response) {
             deliveryAddress: true,
             createdAt: true,
             updatedAt: true,
+          },
+        });
+
+        await prisma.auth.update({
+          where: {
+            id: request.user.id,
+          },
+          data: {
+            role,
           },
         });
 
