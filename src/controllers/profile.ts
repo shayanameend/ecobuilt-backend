@@ -21,7 +21,7 @@ async function getProfile(request: Request, response: Response) {
       case "ADMIN": {
         const profile = await prisma.admin.findUnique({
           where: {
-            id: request.user.id,
+            authId: request.user.id,
           },
           select: {
             id: true,
@@ -49,7 +49,7 @@ async function getProfile(request: Request, response: Response) {
       case "VENDOR": {
         const profile = await prisma.vendor.findUnique({
           where: {
-            id: request.user.id,
+            authId: request.user.id,
           },
           select: {
             id: true,
@@ -81,7 +81,7 @@ async function getProfile(request: Request, response: Response) {
       case "USER": {
         const profile = await prisma.user.findUnique({
           where: {
-            id: request.user.id,
+            authId: request.user.id,
           },
           select: {
             id: true,
@@ -275,7 +275,7 @@ async function updateProfile(request: Request, response: Response) {
 
         const profile = await prisma.admin.update({
           where: {
-            id: request.user.id,
+            authId: request.user.id,
           },
           data: {
             name,
@@ -306,7 +306,7 @@ async function updateProfile(request: Request, response: Response) {
 
         const profile = await prisma.vendor.update({
           where: {
-            id: request.user.id,
+            authId: request.user.id,
           },
           data: {
             name,
@@ -345,7 +345,7 @@ async function updateProfile(request: Request, response: Response) {
 
         const profile = await prisma.user.update({
           where: {
-            id: request.user.id,
+            authId: request.user.id,
           },
           data: {
             name,
