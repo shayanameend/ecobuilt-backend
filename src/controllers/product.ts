@@ -139,11 +139,27 @@ async function createProduct(request: Request, response: Response) {
   try {
     const validatedData = createProductBodySchema.parse(request.body);
 
-    const pictureIds: string[] = [];
+    const category = await prisma.category.findUnique({
+      where: { id: validatedData.categoryId },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        isDeleted: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!category || category.status !== "APPROVED" || category.isDeleted) {
+      throw new NotFoundResponse("Category not found!");
+    }
 
     if (!request.files || request.files.length === 0) {
       throw new BadResponse("At least 1 picture is required!");
     }
+
+    const pictureIds: string[] = [];
 
     for (const file of request.files as Express.Multer.File[]) {
       const pictureId = addFile({ file });
