@@ -92,9 +92,13 @@ async function getProducts(request: Request, response: Response) {
       },
     });
 
+    const total = await prisma.product.count({ where });
+    const pages = Math.ceil(total / limit);
+
     return response.success(
       {
         data: { products },
+        meta: { total, pages, limit, page },
       },
       {
         message: "Products fetched successfully!",
