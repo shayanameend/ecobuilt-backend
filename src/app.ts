@@ -17,10 +17,8 @@ app.use("/subscriptions/webhook", express.raw({ type: "application/json" }));
 
 app.use(cors());
 app.use(morgan("dev"));
-app.use(express.json({ limit: Number.POSITIVE_INFINITY }));
-app.use(
-  express.urlencoded({ extended: true, limit: Number.POSITIVE_INFINITY }),
-);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(expandResponse);
 
 app.use("/auth", authRouter);
