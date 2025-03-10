@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 
+import type { Prisma } from "@prisma/client";
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
 import {
