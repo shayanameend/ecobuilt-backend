@@ -175,6 +175,17 @@ const updateProductParamsSchema = zod.object({
 });
 
 const updateProductBodySchema = zod.object({
+  pictureIds: zod
+    .array(
+      zod
+        .string({
+          message: "Picture ID must be a string!",
+        })
+        .length(40, {
+          message: "Picture ID must be a 40-character string!",
+        }),
+    )
+    .default([]),
   name: zod
     .string({
       message: "Name must be a string!",

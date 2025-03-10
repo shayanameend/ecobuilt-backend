@@ -1,8 +1,9 @@
 import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 
-import { NotFoundResponse, handleErrors } from "~/lib/error";
+import { BadResponse, NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
+import { addFile, removeFile } from "~/services/file";
 import {
   createProductBodySchema,
   getProductParamsSchema,
@@ -140,6 +141,16 @@ async function createProduct(request: Request, response: Response) {
 
     const pictureIds: string[] = [];
 
+    if (!request.files || request.files.length === 0) {
+      throw new BadResponse("At least 1 picture is required!");
+    }
+
+    for (const file of request.files as Express.Multer.File[]) {
+      const pictureId = addFile({ file });
+
+      pictureIds.push(pictureId);
+    }
+
     const product = await prisma.product.create({
       data: { ...validatedData, pictureIds },
       select: {
@@ -175,7 +186,17 @@ async function updateProduct(request: Request, response: Response) {
     const { id } = updateProductParamsSchema.parse(request.params);
     const validatedData = updateProductBodySchema.parse(request.body);
 
-    const pictureIds = [""];
+    for (const pictureId of validatedData.pictureIds) {
+      removeFile({ key: pictureId });
+    }
+
+    const pictureIds: string[] = [];
+
+    for (const file of request.files as Express.Multer.File[]) {
+      const pictureId = addFile({ file });
+
+      pictureIds.push(pictureId);
+    }
 
     const product = await prisma.product.update({
       where: { id },
