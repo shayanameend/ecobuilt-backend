@@ -1,8 +1,8 @@
+import type { Prisma } from "@prisma/client";
 import type { Request, Response } from "express";
 
 import { NotFoundResponse, handleErrors } from "~/lib/error";
 import { prisma } from "~/lib/prisma";
-import type { Prisma } from "@prisma/client";
 import {
   createCategoryBodySchema,
   getCategoriesQuerySchema,
