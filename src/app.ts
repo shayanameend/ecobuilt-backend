@@ -15,12 +15,7 @@ const app = express();
 
 app.use("/subscriptions/webhook", express.raw({ type: "application/json" }));
 
-app.use(
-  cors({
-    origin: "*",
-    maxAge: 7 * 86400, // 7 * 24 hrs
-  }),
-);
+app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json({ limit: Number.POSITIVE_INFINITY }));
 app.use(
