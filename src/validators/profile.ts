@@ -254,9 +254,11 @@ const updateVendorProfileBodySchema = zod.object({
 
 const updateUserProfileBodySchema = zod.object({
   pictureId: zod
-    .string()
+    .string({
+      message: "Picture ID must be a string!",
+    })
     .length(40, {
-      message: "Picture ID is invalid!",
+      message: "Picture ID must be a 40-character string!",
     })
     .optional(),
   name: zod
