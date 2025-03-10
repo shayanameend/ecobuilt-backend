@@ -9,11 +9,9 @@ import { expandResponse } from "~/middlewares/response";
 import { authRouter } from "~/routers/auth";
 import { categoryRouter } from "~/routers/category";
 import { profileRouter } from "~/routers/profile";
-import { productRouter } from "./routers/product";
+import { productRouter } from "~/routers/product";
 
 const app = express();
-
-app.use("/subscriptions/webhook", express.raw({ type: "application/json" }));
 
 app.use(cors());
 app.use(morgan("dev"));
