@@ -17,6 +17,7 @@ async function getProducts(request: Request, response: Response) {
     const {
       page,
       limit,
+      sort,
       name,
       minStock,
       minPrice,
@@ -69,6 +70,13 @@ async function getProducts(request: Request, response: Response) {
       where,
       take: limit,
       skip: (page - 1) * limit,
+      orderBy: {
+        ...(sort === "POPULARITY" && {
+          orderToProduct: { _count: "desc" },
+        }),
+        ...(sort === "LATEST" && { createdAt: "desc" }),
+        ...(sort === "OLDEST" && { createdAt: "asc" }),
+      },
       select: {
         id: true,
         pictureIds: true,

@@ -23,6 +23,11 @@ const getProductsQuerySchema = zod.object({
       message: "Limit must be a positive number!",
     })
     .default(10),
+  sort: zod
+    .enum(["POPULARITY", "LATEST", "OLDEST"], {
+      message: "Sort must be one of 'POPULARITY', 'LATEST', 'OLDEST'!",
+    })
+    .optional(),
   name: zod
     .string({
       message: "Name must be a string!",
